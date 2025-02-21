@@ -53,6 +53,18 @@ def _convertCredit(csv_reader):
 
     return transactions
 
+def _chooseConvertion(csv_reader):
+    csv_headings = next(csv_reader)
+
+    if csv_headings== STATEMENT_FILE_HEADER:
+        #print("Statement file")
+        return _convertStatement(csv_reader)
+    
+    if csv_headings == CREDIT_CARD_FILE_HEADER:
+        #print("Credit Card file")
+        # print(csv_headings)
+        return _convertCredit(csv_reader)
+
 def _readFile(filename):
     transactions = []
 
@@ -60,15 +72,7 @@ def _readFile(filename):
 
     with open(filename, newline='') as csvfile:
         csv_reader = csv.reader(csvfile, delimiter=',', quotechar='"')
-        csv_headings = next(csv_reader)
-
-        if csv_headings== STATEMENT_FILE_HEADER:
-            print("Statement file")
-            transactions.extend(_convertStatement(csv_reader))
-        if csv_headings == CREDIT_CARD_FILE_HEADER:
-            print("Credit Card file")
-            # print(csv_headings)
-            transactions.extend(_convertCredit(csv_reader))
+        transactions.extend(_chooseConvertion(csv_reader))
 
     return transactions
 

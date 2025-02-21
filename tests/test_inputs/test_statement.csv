@@ -1,0 +1,11 @@
+Description,,Summary Amt.
+Beginning balance as of 02/01/2025,,"1,234.56"
+Total credits,,"5,678.90"
+Total debits,,"0.00"
+Ending balance as of 02/28/2025,,"12,345.67"
+
+Date,Description,Amount,Running Bal.
+02/01/2025,Beginning balance as of 02/01/2025,,"1,234.56"
+02/13/2025,"ABCDEFGH","1,200.00","5,678.90"
+02/16/2025,"IJKLMNOP,123","-1,234.56","3,456.78"
+02/20/2025,"QRSTUVXW","200.00","3,856.78"
