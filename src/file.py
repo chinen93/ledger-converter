@@ -3,23 +3,25 @@ import os
 
 from src.transaction import Transaction
 
-STATEMENT_FILE_HEADER = "Description,,Summary Amt.".split(',')
-CREDIT_CARD_FILE_HEADER = "Posted Date,Reference Number,Payee,Address,Amount".split(',')
+
+STATEMENT_FILE_HEADER = "Description,,Summary Amt.".split(",")
+CC_FILE_HEADER = "Posted Date,Reference Number,Payee,Address,Amount".split(",")
+
 
 def _convertStatement(csv_reader):
 
     # Jump statement information
     for _ in range(5):
         next(csv_reader)
-    
-    csv_headings = next(csv_reader)
+
+    next(csv_reader)
     # print(csv_headings)
 
     transactions = []
 
     for row in csv_reader:
         # print(', '.join(row))
-        
+
         # ['Date', 'Description', 'Amount', 'Running Bal.']
         date = row[0]
         description = row[1]
@@ -34,6 +36,7 @@ def _convertStatement(csv_reader):
         transactions.append(transaction)
 
     return transactions
+
 
 def _convertCredit(csv_reader):
     transactions = []
@@ -53,28 +56,31 @@ def _convertCredit(csv_reader):
 
     return transactions
 
+
 def _chooseConvertion(csv_reader):
     csv_headings = next(csv_reader)
 
-    if csv_headings== STATEMENT_FILE_HEADER:
-        #print("Statement file")
+    if csv_headings == STATEMENT_FILE_HEADER:
+        # print("Statement file")
         return _convertStatement(csv_reader)
-    
-    if csv_headings == CREDIT_CARD_FILE_HEADER:
-        #print("Credit Card file")
+
+    if csv_headings == CC_FILE_HEADER:
+        # print("Credit Card file")
         # print(csv_headings)
         return _convertCredit(csv_reader)
+
 
 def _readFile(filename):
     transactions = []
 
     print(f"Reading Transactions from: '{filename}'")
 
-    with open(filename, newline='') as csvfile:
-        csv_reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+    with open(filename, newline="") as csvfile:
+        csv_reader = csv.reader(csvfile, delimiter=",", quotechar='"')
         transactions.extend(_chooseConvertion(csv_reader))
 
     return transactions
+
 
 def getTransactions():
     # Getting the current work directory (cwd)
@@ -92,6 +98,7 @@ def getTransactions():
 
     return transactions
 
+
 def saveTransactions(transactions):
 
     filename = "output.txt"
@@ -100,5 +107,3 @@ def saveTransactions(transactions):
             file.write(transaction.exportString())
 
     print(f"Wrote Transactions to: '{filename}'")
-
-    

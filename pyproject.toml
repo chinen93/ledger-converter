@@ -1,0 +1,24 @@
+[tool.black]
+line-length = 100
+target-version = ['py38']
+exclude = '''
+(
+  \.eggs
+  |\.git
+  |\.hg
+  |\.mypy_cache
+  |\.nox
+  |\.tox
+  |\.venv
+  |_build
+  |buck-out
+  |build
+  |dist
+)
+'''
+
+[tool.isort]
+line_length = 100
+sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+multi_line_output = 3
+lines_after_imports = 2

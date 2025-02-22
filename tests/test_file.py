@@ -1,25 +1,26 @@
-import unittest
-import os
 import csv
-
+import os
+import unittest
 from datetime import datetime
+
 from src.file import _chooseConvertion
 from src.transaction import Transaction
 
-STATEMENT_FILENAME =  "tests/test_inputs/test_statement.csv"
-CREDIT_CARD_FILENAME =  "tests/test_inputs/test_creditCard.csv"
+
+STATEMENT_FILENAME = "tests/test_inputs/test_statement.csv"
+CREDIT_CARD_FILENAME = "tests/test_inputs/test_creditCard.csv"
 
 
 class TestFile(unittest.TestCase):
     currentDir = os.getcwd()
 
     def test_shouldChooseStatementConversion(self):
-        
+
         transactions = []
 
         filename = os.path.join(self.currentDir, STATEMENT_FILENAME)
-        with open(filename, newline='') as csvfile:
-            csv_reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+        with open(filename, newline="") as csvfile:
+            csv_reader = csv.reader(csvfile, delimiter=",", quotechar='"')
             transactions.extend(_chooseConvertion(csv_reader))
 
         self.assertEqual(len(transactions), 3)
@@ -43,12 +44,12 @@ class TestFile(unittest.TestCase):
         self.assertEqual(transactions[2].payee, Transaction.ACCOUNT_CHECKING)
 
     def test_shouldChooseCreditCardConversion(self):
-        
+
         transactions = []
 
         filename = os.path.join(self.currentDir, CREDIT_CARD_FILENAME)
-        with open(filename, newline='') as csvfile:
-            csv_reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+        with open(filename, newline="") as csvfile:
+            csv_reader = csv.reader(csvfile, delimiter=",", quotechar='"')
             transactions.extend(_chooseConvertion(csv_reader))
 
         self.assertEqual(len(transactions), 4)
@@ -76,7 +77,3 @@ class TestFile(unittest.TestCase):
         self.assertEqual(transactions[3].value, 1750.00)
         self.assertEqual(transactions[3].account, Transaction.LIABILITY_DEFAULT)
         self.assertEqual(transactions[3].payee, Transaction.ACCOUNT_CREDIT)
-
-        
-
-            

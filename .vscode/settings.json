@@ -1,0 +1,16 @@
+{
+  "editor.defaultFormatter": "ms-python.black-formatter",
+  "editor.formatOnSave": true,
+  "black-formatter.args": ["--line-length", "88"],
+  "[python]": {
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "always"
+    },
+    "editor.formatOnSave": true
+  },
+  "flake8.args": ["--max-line-length", "80", "--extend-ignore", "E203"],
+  "go.lintOnSave": "file",
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}
