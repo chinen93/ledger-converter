@@ -3,12 +3,10 @@ from abc import ABC, abstractmethod
 
 class Convertion(ABC):
 
-    @staticmethod
     @abstractmethod
-    def canConvert(heading):
+    def canConvert(self, heading):
         raise NotImplementedError
 
-    @staticmethod
     @abstractmethod
-    def convert(heading, csv_reading):
+    def convert(self, heading, csv_reading):
         raise NotImplementedError

@@ -1,14 +1,18 @@
 import csv
 import os
 
+from src.accounts import Accounts
 from src.convertions.creditCardConvertion import CreditCardConvertion
 from src.convertions.statementConvertion import StatementConvertion
+
+
+accounts = Accounts()
 
 
 def _chooseConvertion(csv_reader):
     csv_headings = next(csv_reader)
 
-    converters = [StatementConvertion, CreditCardConvertion]
+    converters = [StatementConvertion(accounts), CreditCardConvertion(accounts)]
 
     for converter in converters:
         if converter.canConvert(csv_headings):
@@ -30,14 +34,14 @@ def _readFile(filename):
 def getTransactions():
     # Getting the current work directory (cwd)
     currentDir = os.getcwd()
+    inputDir = currentDir + "/input/"
 
     transactions = []
 
-    for r, _, f in os.walk(currentDir):
-        for file in f:
-            if file.endswith(".csv"):
-                filename = os.path.join(r, file)
-                transactions.extend(_readFile(filename))
+    for filename in os.listdir(inputDir):
+        if filename.endswith(".csv"):
+            filename = os.path.join(inputDir, filename)
+            transactions.extend(_readFile(filename))
 
     transactions.sort(key=lambda x: x.date)
 

@@ -1,3 +1,4 @@
+from src.accounts import Accounts
 from src.convertions.convertion import Convertion
 from src.transaction import Transaction
 
@@ -7,10 +8,13 @@ class StatementConvertion(Convertion):
     FIRST_LINE = ["Description", "", "Summary Amt."]
     HEADER = ["Date", "Description", "Amount", "Running Bal."]
 
-    def canConvert(heading):
+    def __init__(self, accounts):
+        self.account = accounts
+
+    def canConvert(self, heading):
         return heading == StatementConvertion.FIRST_LINE
 
-    def convert(heading, csv_reader):
+    def convert(self, heading, csv_reader):
         # Move reader cursor until the beginning of data
         row = heading
         while row != StatementConvertion.HEADER:
@@ -22,13 +26,37 @@ class StatementConvertion(Convertion):
         for row in csv_reader:
             date = row[0]
             description = row[1]
-            value = row[2]
-            account = Transaction.ACCOUNT_CHECKING
+            value = float(row[2].replace(",", ""))
+
+            # Transaction to buy something from someone
+            if value < 0:
+                value = value * -1
+
+                account = self.account.getAccount(
+                    Accounts.DEFAULT_BANK,
+                    "Checking",
+                )
+                payee = self.account.getAccount(
+                    Accounts.DEFAULT_EXPENSES,
+                    description,
+                )
+
+            # Transaction to pay one of my accounts
+            else:
+                self.value = value
+                account = self.account.getAccount(
+                    Accounts.DEFAULT_LIABILITY,
+                    description,
+                )
+                payee = self.account.getAccount(
+                    Accounts.DEFAULT_BANK,
+                    "Checking",
+                )
 
             if description.startswith("Beginning balance"):
                 continue
 
-            transaction = Transaction(date, description, value, account)
+            transaction = Transaction(date, description, value, payee, account)
             # print(transaction.toString())
             transactions.append(transaction)
 
