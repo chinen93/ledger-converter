@@ -3,7 +3,14 @@ import datetime
 
 class Transaction:
 
-    def __init__(self, date, description, value, payee, account):
+    def __init__(
+        self,
+        date: str,
+        description: str,
+        value: float,
+        payee: str,
+        account: str,
+    ):
 
         format = "%m/%d/%Y"
         datetime_str = datetime.datetime.strptime(date, format)
@@ -14,14 +21,14 @@ class Transaction:
         self.payee = payee
         self.account = account
 
-    def exportString(self):
+    def exportString(self) -> str:
         return (
             f'{self.date.strftime("%Y-%m-%d")}       {self.description}\n'
             f"    {self.payee}                            ${self.value}\n"
             f"    {self.account}\n\n"
         )
 
-    def toString(self):
+    def toString(self) -> str:
         return (
             f"{self.date} - "
             f"{self.description} - "

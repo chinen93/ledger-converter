@@ -1,4 +1,6 @@
+import logging
 import os
+from pprint import pformat
 
 from src.accountsAliases import DEFAULT_ALIASES_FILE, AccountsAliases
 
@@ -15,8 +17,8 @@ class Accounts:
 
     def __init__(
         self,
-        accounts_file=DEFAULT_ACCOUNTS_FILE,
-        aliases_file=DEFAULT_ALIASES_FILE,
+        accounts_file: str = DEFAULT_ACCOUNTS_FILE,
+        aliases_file: str = DEFAULT_ALIASES_FILE,
     ):
         self.accountsMap = {}
         self.aliases = AccountsAliases(aliases_file)
@@ -41,9 +43,10 @@ class Accounts:
                 else:
                     self.accountsMap[accountType] = {identifier: line}
 
-        # print(self.accountsMap)
+        logger = logging.getLogger(__name__)
+        logger.debug(pformat(self.accountsMap))
 
-    def getAccount(self, accountType, identifier):
+    def getAccount(self, accountType: str, identifier: str) -> str:
         if accountType in self.accountsMap:
 
             for aliasKey in self.aliases.aliasesMap.keys():

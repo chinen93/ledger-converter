@@ -1,4 +1,6 @@
+import logging
 import os
+from pprint import pformat
 
 
 ALIASES_FILE = "input/accounts_aliases.txt"
@@ -6,7 +8,7 @@ DEFAULT_ALIASES_FILE = "input/accounts_aliases.txt.example"
 
 
 class AccountsAliases:
-    def __init__(self, aliases_file=ALIASES_FILE):
+    def __init__(self, aliases_file: str = ALIASES_FILE):
         self.aliasesMap = {}
 
         currentDir = os.getcwd()
@@ -25,7 +27,10 @@ class AccountsAliases:
 
                 self.aliasesMap[identifier] = alias
 
-    def getAlias(self, identifier):
+        logger = logging.getLogger(__name__)
+        logger.debug(pformat(self.aliasesMap))
+
+    def getAlias(self, identifier: str) -> str:
         identifier = identifier.upper()
         if identifier in self.aliasesMap:
             return self.aliasesMap[identifier]

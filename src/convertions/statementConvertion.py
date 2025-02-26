@@ -1,3 +1,5 @@
+from csv import DictReader
+
 from src.accounts import Accounts
 from src.convertions.convertion import Convertion
 from src.transaction import Transaction
@@ -8,13 +10,18 @@ class StatementConvertion(Convertion):
     FIRST_LINE = ["Description", "", "Summary Amt."]
     HEADER = ["Date", "Description", "Amount", "Running Bal."]
 
-    def __init__(self, accounts):
+    def __init__(self, accounts: Accounts):
         self.account = accounts
 
-    def canConvert(self, heading):
+    def canConvert(self, heading: str) -> bool:
         return heading == StatementConvertion.FIRST_LINE
 
-    def convert(self, heading, csv_reader):
+    def convert(
+        self,
+        heading: str,
+        csv_reader: DictReader,
+    ) -> list[Transaction]:
+
         # Move reader cursor until the beginning of data
         row = heading
         while row != StatementConvertion.HEADER:
@@ -57,7 +64,6 @@ class StatementConvertion(Convertion):
                 continue
 
             transaction = Transaction(date, description, value, payee, account)
-            # print(transaction.toString())
             transactions.append(transaction)
 
         return transactions
