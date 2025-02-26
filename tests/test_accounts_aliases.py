@@ -18,10 +18,10 @@ class TestAccountsAliases(unittest.TestCase):
             "CHECKS": "Checking",
         }
 
-        self.assertDictEqual(self.aliases.aliases, expected)
+        self.assertDictEqual(self.aliases.aliasesMap, expected)
 
         wrong_file_accounts = AccountsAliases("INVALID_FILE")
-        self.assertDictEqual(wrong_file_accounts.aliases, expected)
+        self.assertDictEqual(wrong_file_accounts.aliasesMap, expected)
 
     def test_shouldGetAccountsAliases(self):
 

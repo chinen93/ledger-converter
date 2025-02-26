@@ -1,6 +1,7 @@
 import unittest
 
 from src.accounts import DEFAULT_ACCOUNTS_FILE, Accounts
+from src.accountsAliases import DEFAULT_ALIASES_FILE
 
 
 class TestAccounts(unittest.TestCase):
@@ -8,7 +9,10 @@ class TestAccounts(unittest.TestCase):
     accounts = None
 
     def setUp(self):
-        self.accounts = Accounts(accounts_file=DEFAULT_ACCOUNTS_FILE)
+        self.accounts = Accounts(
+            accounts_file=DEFAULT_ACCOUNTS_FILE,
+            aliases_file=DEFAULT_ALIASES_FILE,
+        )
 
     def test_shouldCreateAccounts(self):
 
@@ -29,6 +33,8 @@ class TestAccounts(unittest.TestCase):
         tests = [
             ("Bank", "Checking", "Bank:Checking"),
             ("Bank", "CHECKING", "Bank:Checking"),
+            ("Bank", "Checks", "Bank:Checking"),
+            ("Bank", "CHECKS", "Bank:Checking"),
             ("Bank", "CreditCard", "Bank:CreditCard"),
             ("Bank", "CreditCard ABC DEF", "Bank:CreditCard"),
             ("Bank", "CREDITCARD", "Bank:CreditCard"),

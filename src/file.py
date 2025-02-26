@@ -1,12 +1,13 @@
 import csv
 import os
 
-from src.accounts import Accounts
+from src.accounts import ACCOUNTS_FILE, Accounts
+from src.accountsAliases import ALIASES_FILE
 from src.convertions.creditCardConvertion import CreditCardConvertion
 from src.convertions.statementConvertion import StatementConvertion
 
 
-accounts = Accounts()
+accounts = Accounts(ACCOUNTS_FILE, ALIASES_FILE)
 
 
 def _chooseConvertion(csv_reader):
