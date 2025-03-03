@@ -2,9 +2,10 @@ import logging
 import os
 from pprint import pformat
 
+from src.config import ALIASES_FILE
 
-ALIASES_FILE = "input/accounts_aliases.txt"
-DEFAULT_ALIASES_FILE = "input/accounts_aliases.txt.example"
+
+DEFAULT_ALIASES_FILE = "input/config/accounts_aliases.txt.example"
 
 
 class AccountsAliases:

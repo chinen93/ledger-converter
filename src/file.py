@@ -2,8 +2,8 @@ import csv
 import logging
 import os
 
-from src.accounts import ACCOUNTS_FILE, Accounts
-from src.accountsAliases import ALIASES_FILE
+from src.accounts import Accounts
+from src.config import ACCOUNTS_FILE, ALIASES_FILE, INPUT_FOLDER, OUTPUT_FILENAME
 from src.convertions.convertion import Convertion
 from src.convertions.creditCardConvertion import CreditCardConvertion
 from src.convertions.statementConvertion import StatementConvertion
@@ -46,7 +46,7 @@ def getTransactions() -> list[Transaction]:
 
     # Getting the current work directory (cwd)
     currentDir = os.getcwd()
-    inputDir = currentDir + "/input/"
+    inputDir = currentDir + INPUT_FOLDER
 
     transactions = []
 
@@ -62,9 +62,8 @@ def getTransactions() -> list[Transaction]:
 
 def saveTransactions(transactions: list[Transaction]) -> None:
 
-    filename = "output.txt"
-    with open(filename, mode="w") as file:
+    with open(OUTPUT_FILENAME, mode="w") as file:
         for transaction in transactions:
             file.write(transaction.exportString())
 
-    logging.info(f"Wrote Transactions to: '{filename}'")
+    logging.info(f"Wrote Transactions to: '{OUTPUT_FILENAME}'")

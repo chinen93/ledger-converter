@@ -65,11 +65,11 @@ pip3 install -r requirements.txt
 Follow these steps to convert your files into Ledger's format:
 
 1. Prepare Your CSV Files
-    - Move files to be converted into `input` directory  inside the project folder.
+    - Move files to be converted into `input/files/` inside the project folder.
 
-2. Prepare Accounts and Aliases File
+2. Prepare Accounts and Aliases File in `input/config/`
     - Copy `accounts.txt.example` to `accounts.txt`
-    - Copy `accounts_aliases.txt` to `accounts_aliases.txt`
+    - Copy `accounts_aliases.txt.example` to `accounts_aliases.txt`
     - Populate with known accounts and aliases to be used as placeholders in the conversion
     - HINT: One way to populate is to use `ledger accounts >> accounts.txt`
 

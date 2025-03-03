@@ -5,8 +5,7 @@ from pprint import pformat
 from src.accountsAliases import DEFAULT_ALIASES_FILE, AccountsAliases
 
 
-ACCOUNTS_FILE = "input/accounts.txt"
-DEFAULT_ACCOUNTS_FILE = "input/accounts.txt.example"
+DEFAULT_ACCOUNTS_FILE = "input/config/accounts.txt.example"
 
 
 class Accounts:
