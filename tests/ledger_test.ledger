@@ -1,0 +1,15 @@
+;; ===========================================================================
+;;
+;; ===========================================================================
+
+2025-06-27       TEST CHECKING
+    Bank:Checking                            $50.00
+    Liability:Test
+
+2025-06-28       TEST CREDIT CARD
+    Bank:CreditCard                            $50.00
+    Bank:Checking
+
+2025-06-28       TEST ANOTHER CREDIT CARD
+    Bank:Test:CreditCard                            $50.00
+    Bank:Checking

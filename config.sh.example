@@ -1,0 +1,12 @@
+# ======================================
+# Instructions
+# ======================================
+# 
+# 1) Copy this file and rename it to config.sh
+# 2) Change the variable below to the filepath of your ledger file
+#
+# With this configuration the program can automate the conversion using
+# your real accounts in the ledger making it easier to use it.
+
+# Your actual Ledger Filepath
+LEDGER_FILE="./tests/ledger_test.ledger"

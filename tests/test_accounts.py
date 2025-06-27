@@ -21,6 +21,7 @@ class TestAccounts(unittest.TestCase):
                 "CHECKING": "Bank:Checking",
                 "CREDITCARD": "Bank:CreditCard",
             },
+            "Liability": {"TEST": "Liability:Test"},
         }
 
         self.assertDictEqual(self.accounts.accountsMap, expected)

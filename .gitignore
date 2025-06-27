@@ -1,7 +1,16 @@
+# Ledger Converter files
 .DS_Store
+
 input/
 output.txt
+config.sh
+
 venv/
+
+
+# ======================================
+# Gitignore Auto-generated files
+# ======================================
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
