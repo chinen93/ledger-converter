@@ -8,6 +8,9 @@ class Convertion(ABC):
 
     @abstractmethod
     def canConvert(self, heading: str) -> bool:
+        """
+        Returns TRUE if conversion class can convert file.
+        """
         raise NotImplementedError
 
     @abstractmethod
@@ -16,4 +19,10 @@ class Convertion(ABC):
         heading: str,
         csv_reading: DictReader,
     ) -> list[Transaction]:
+        """
+        Conversion of file into transaction list.
+
+        Returns:
+        list[Transaction]: All transactions in file
+        """
         raise NotImplementedError

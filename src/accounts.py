@@ -14,14 +14,17 @@ class Accounts:
     DEFAULT_LIABILITY = "Liability"
     DEFAULT_UNKNOWN = "Don't know"
 
-    def __init__(
-        self,
-        accounts_file: str = DEFAULT_ACCOUNTS_FILE,
-        aliases_file: str = DEFAULT_ALIASES_FILE,
-    ):
-        self.accountsMap = {}
-        self.aliases = AccountsAliases(aliases_file)
+    def _load_file(self, accounts_file: str) -> None:
+        """
+        Loads 'accounts_file' into data structure.
 
+        Data structure format:
+
+        "Bank":{
+            "CHECKING": "Bank:Checking",
+            "CREDITCARD": "Bank:CreditCard"
+        }
+        """
         currentDir = os.getcwd()
         filename = os.path.join(currentDir, accounts_file)
 
@@ -42,10 +45,32 @@ class Accounts:
                 else:
                     self.accountsMap[accountType] = {identifier: line}
 
+    def __init__(
+        self,
+        accounts_file: str = DEFAULT_ACCOUNTS_FILE,
+        aliases_file: str = DEFAULT_ALIASES_FILE,
+    ):
+        self.accountsMap = {}
+        self.aliases = AccountsAliases(aliases_file)
+
+        self._load_file(accounts_file)
+
         logger = logging.getLogger(__name__)
         logger.debug(pformat(self.accountsMap))
 
     def getAccount(self, accountType: str, identifier: str) -> str:
+        """
+        Get account.
+
+        Account Type normally is: Assets, Expenses, Liability, etc...
+
+        Identifier represents the account itself in Ledger.
+
+        If no account is found a default identifier is used.
+
+        Returns:
+        str: Account identifier
+        """
         if accountType in self.accountsMap:
 
             for aliasKey in self.aliases.aliasesMap.keys():

@@ -17,6 +17,14 @@ def _chooseConvertion(
     converters: list[Convertion],
     csv_reader: csv.DictReader,
 ) -> list[Transaction]:
+    """
+    Return transactions from csv.
+
+    Choose which converter to use based on the content of the file heading.
+
+    Returns:
+    list[Transaction]: transactions as order in the file
+    """
     csv_headings = next(csv_reader)
 
     for converter in converters:
@@ -25,6 +33,13 @@ def _chooseConvertion(
 
 
 def _readFile(converters: list[Convertion], filename: str) -> list[Transaction]:
+    """
+    Get transactions from 'filename' using one of the 'converters'
+
+    Returns:
+    list[Transaction]: Transactions from the 'filename' or empty
+    """
+
     transactions = []
 
     logging.info(f"Reading Transactions from: '{filename}'")
@@ -37,6 +52,12 @@ def _readFile(converters: list[Convertion], filename: str) -> list[Transaction]:
 
 
 def getTransactions() -> list[Transaction]:
+    """
+    Retrieve all transactions from 'config.INPUT_FOLDER' folder
+
+    Returns:
+    list[Transaction]: Transactions in ascending date order
+    """
 
     accounts = Accounts(ACCOUNTS_FILE, ALIASES_FILE)
     converters = [StatementConvertion(accounts), CreditCardConvertion(accounts)]
@@ -61,6 +82,9 @@ def getTransactions() -> list[Transaction]:
 
 
 def saveTransactions(transactions: list[Transaction]) -> None:
+    """
+    Saves 'transactions' to the 'config.OUTPUT_FILENAME'
+    """
 
     with open(OUTPUT_FILENAME, mode="w") as file:
         for transaction in transactions:

@@ -22,6 +22,12 @@ class Transaction:
         self.account = account
 
     def exportString(self) -> str:
+        """
+        Exports transaction to a Ledger format
+
+        Returns:
+        str: transaction in Ledger format
+        """
         return (
             f'{self.date.strftime("%Y-%m-%d")}       {self.description}\n'
             f"    {self.payee}                            ${self.value}\n"

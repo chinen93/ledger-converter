@@ -19,6 +19,9 @@ def setup_logging() -> None:
 
 
 def main() -> None:
+    """
+    Main program function
+    """
     setup_logging()
 
     logger = logging.getLogger(__name__)
