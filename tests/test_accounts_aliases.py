@@ -27,9 +27,9 @@ class TestAccountsAliases(unittest.TestCase):
 
         tests = [
             ("Checking", "CHECKING"),
-            ("Credit Card", "CreditCard"),
-            ("Check", "Checking"),
-            ("Checks", "Checking"),
+            ("Credit Card", "CREDITCARD"),
+            ("Check", "CHECKING"),
+            ("Checks", "CHECKING"),
         ]
 
         for identifier, expected in tests:

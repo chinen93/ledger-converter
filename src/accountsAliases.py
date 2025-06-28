@@ -49,15 +49,22 @@ class AccountsAliases:
         logger = logging.getLogger(__name__)
         logger.debug(pformat(self.aliasesMap))
 
+    def hasAlias(self, identifier: str) -> bool:
+        """
+        Return TRUE if AccountAliases has 'identifier'
+        """
+        return identifier in self.aliasesMap.keys()
+
     def getAlias(self, identifier: str) -> str:
         """
         Get alias from 'identifier'
 
         Returns:
-        str: Account or 'identifier'
+        str: Account or 'identifier' in uppercase
         """
         identifier = identifier.upper()
+
         if identifier in self.aliasesMap:
-            return self.aliasesMap[identifier]
+            return self.aliasesMap[identifier].upper()
 
         return identifier

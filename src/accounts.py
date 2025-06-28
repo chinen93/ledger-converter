@@ -58,6 +58,16 @@ class Accounts:
         logger = logging.getLogger(__name__)
         logger.debug(pformat(self.accountsMap))
 
+    def hasAccount(self, accountType: str, identifier: str) -> bool:
+        """
+        Return TRUE if account map has 'accountType' and 'identifier'
+        """
+
+        if accountType not in self.accountsMap:
+            return False
+
+        return identifier in self.accountsMap[accountType].keys()
+
     def getAccount(self, accountType: str, identifier: str) -> str:
         """
         Get account.
@@ -74,14 +84,14 @@ class Accounts:
         if accountType in self.accountsMap:
             identifier_parts = identifier.split(" ")
             while len(identifier_parts) > 0:
-                identifier_small = " ".join(identifier_parts).upper()
+                id_substring = " ".join(identifier_parts).upper()
 
-                if identifier_small in self.aliases.aliasesMap.keys():
-                    aliasIdentifier = self.aliases.getAlias(identifier_small).upper()
+                if self.aliases.hasAlias(id_substring):
+                    aliasIdentifier = self.aliases.getAlias(id_substring)
                     return self.accountsMap[accountType][aliasIdentifier]
 
-                if identifier_small in self.accountsMap[accountType].keys():
-                    return self.accountsMap[accountType][identifier_small]
+                if self.hasAccount(accountType, id_substring):
+                    return self.accountsMap[accountType][id_substring]
 
                 identifier_parts.pop()
 
