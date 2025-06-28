@@ -33,7 +33,7 @@ class CreditCardConvertion(Convertion):
 
                 account = self.account.getAccount(
                     Accounts.DEFAULT_BANK,
-                    "CreditCards",
+                    "CreditCard",
                 )
                 payee = self.account.getAccount(
                     Accounts.DEFAULT_EXPENSES,
@@ -49,7 +49,7 @@ class CreditCardConvertion(Convertion):
                 )
                 payee = self.account.getAccount(
                     Accounts.DEFAULT_BANK,
-                    "CreditCards",
+                    "CreditCard",
                 )
 
             transaction = Transaction(date, description, value, payee, account)

@@ -34,8 +34,8 @@ class TestAccounts(unittest.TestCase):
         tests = [
             ("Bank", "Checking", "Bank:Checking"),
             ("Bank", "CHECKING", "Bank:Checking"),
-            ("Bank", "Checks", "Bank:Checking"),
-            ("Bank", "CHECKS", "Bank:Checking"),
+            ("Bank", "Check", "Bank:Checking"),
+            ("Bank", "CHECK", "Bank:Checking"),
             ("Bank", "CreditCard", "Bank:CreditCard"),
             ("Bank", "CreditCard ABC DEF", "Bank:CreditCard"),
             ("Bank", "CREDITCARD", "Bank:CreditCard"),

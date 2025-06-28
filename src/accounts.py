@@ -72,14 +72,17 @@ class Accounts:
         str: Account identifier
         """
         if accountType in self.accountsMap:
+            identifier_parts = identifier.split(" ")
+            while len(identifier_parts) > 0:
+                identifier_small = " ".join(identifier_parts).upper()
 
-            for aliasKey in self.aliases.aliasesMap.keys():
-                if aliasKey in identifier.upper():
-                    aliasIdentifier = self.aliases.getAlias(aliasKey).upper()
+                if identifier_small in self.aliases.aliasesMap.keys():
+                    aliasIdentifier = self.aliases.getAlias(identifier_small).upper()
                     return self.accountsMap[accountType][aliasIdentifier]
 
-            for accounsMapKey in self.accountsMap[accountType].keys():
-                if accounsMapKey in identifier.upper():
-                    return self.accountsMap[accountType][accounsMapKey]
+                if identifier_small in self.accountsMap[accountType].keys():
+                    return self.accountsMap[accountType][identifier_small]
+
+                identifier_parts.pop()
 
         return f"{accountType}:{self.DEFAULT_UNKNOWN}"
