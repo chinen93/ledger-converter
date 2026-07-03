@@ -2,7 +2,7 @@ import logging
 import os
 from pprint import pformat
 
-from src.config import ALIASES_FILE
+from config.settings import get_settings
 
 
 DEFAULT_ALIASES_FILE = "input/config/accounts_aliases.txt.example"
@@ -41,7 +41,14 @@ class AccountsAliases:
 
                 self.aliasesMap[identifier] = alias
 
-    def __init__(self, aliases_file: str = ALIASES_FILE):
+    def __init__(self, aliases_file = None):
+
+        self._settings = get_settings()
+
+        if aliases_file is None:
+            aliases_file = self._settings.ALIASES_FILE
+            assert aliases_file is not None
+
         self.aliasesMap = {}
 
         self._load_file(aliases_file)

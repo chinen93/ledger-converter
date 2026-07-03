@@ -1,37 +1,24 @@
-import logging
-import logging.config
-import os
+from logging import getLogger
 
-from src.file import getTransactions, saveTransactions
-
-
-def setup_logging() -> None:
-    """Load logging configuration"""
-    currentDir = os.getcwd()
-    log_dir = f"{currentDir}/logs"
-    config_path = f"{log_dir}/config"
-
-    logging.config.fileConfig(
-        config_path,
-        disable_existing_loggers=False,
-        defaults={"logfilename": f"{log_dir}/ledger_converter.log"},
-    )
+from config.logging import setup_logging
+from src.file import HandleTransactions
 
 
 def main() -> None:
     """
     Main program function
     """
-    setup_logging()
+    setup_logging(testing=False)    
 
-    logger = logging.getLogger(__name__)
+    log = getLogger(__name__)
+    log.info("Program started")
 
-    logger.info("Program started")
+    handleTransactions = HandleTransactions()
 
-    logger.info("Get Transactions")
-    transactions = getTransactions()
+    log.info("Get Transactions")
+    transactions = handleTransactions.getTransactions()
 
-    logger.info("Output Transactions in the Right Format")
-    saveTransactions(transactions)
+    log.info("Output Transactions in the Right Format")
+    handleTransactions.saveTransactions(transactions)
 
-    logger.info("Program Ended")
+    log.info("Program Ended")
