@@ -1,27 +1,29 @@
 import csv
 import os
-import unittest
 from datetime import datetime
 
 from src.accounts import Accounts
 from src.convertions.statementConvertion import StatementConvertion
-
+from tests.conf_log_test import BaseTestCase
 
 STATEMENT_FILENAME = "tests/test_inputs/test_statement.csv"
 ACCOUNT_CHECKING = "Bank:Checking"
 PAYEE_DEFAULT = "Expenses:Don't know"
 LIABILITY_DEFAULT = "Liability:Don't know"
 
-accounts = Accounts()
 
-
-class TestStatementConvertion(unittest.TestCase):
+class TestStatementConvertion(BaseTestCase):
     currentDir = os.getcwd()
     csv_reader = None
     file = None
     converter = None
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
     def setUp(self):
+        accounts = Accounts()
         filename = os.path.join(self.currentDir, STATEMENT_FILENAME)
         self.file = open(filename, newline="")
         self.csv_reader = csv.reader(self.file, delimiter=",", quotechar='"')

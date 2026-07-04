@@ -1,6 +1,6 @@
 import csv
-from logging import getLogger
 import os
+from logging import getLogger
 
 from config.settings import get_settings
 from src.accounts import Accounts
@@ -10,12 +10,11 @@ from src.convertions.statementConvertion import StatementConvertion
 from src.transaction import Transaction
 
 
-class HandleTransactions():
+class HandleTransactions:
 
     def __init__(self):
         self._settings = get_settings()
         self.log = getLogger(__name__)
-
 
     def _chooseConvertion(
         self,
@@ -35,9 +34,8 @@ class HandleTransactions():
         for converter in converters:
             if converter.canConvert(csv_headings):
                 return converter.convert(csv_headings, csv_reader)
-            
-        return []
 
+        return []
 
     def _readFile(self, converters: list[Convertion], filename: str) -> list[Transaction]:
         """
@@ -57,7 +55,6 @@ class HandleTransactions():
             transactions.extend(self._chooseConvertion(converters, csv_reader))
 
         return transactions
-
 
     def getTransactions(self) -> list[Transaction]:
         """
@@ -96,7 +93,6 @@ class HandleTransactions():
         transactions.sort(key=lambda x: x.date)
 
         return transactions
-
 
     def saveTransactions(self, transactions: list[Transaction]) -> None:
         """

@@ -98,6 +98,7 @@ def get_settings():  # type: ignore
             LLM_WEIGHT: LLM weight on job/STAR matching
             TEXT_WEIGHT: text weight on job/STAR matching
         """
+
         ENV_FILEPATH: str = ENV_FILEPATH  # type: ignore
 
         ENVIRONMENT: Optional[str] = os.getenv("ENVIRONMENT")  # type: ignore
@@ -111,7 +112,7 @@ def get_settings():  # type: ignore
         OUTPUT_FILENAME: Optional[str] = os.getenv("OUTPUT_FILENAME")  # type: ignore
         ALIASES_FILE: Optional[str] = os.getenv("ALIASES_FILE")  # type: ignore
         ACCOUNTS_FILE: Optional[str] = os.getenv("ACCOUNTS_FILE")  # type: ignore
-        
+
         def __post_init__(self):
             missing = [
                 key

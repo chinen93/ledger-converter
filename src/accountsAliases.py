@@ -4,7 +4,6 @@ from pprint import pformat
 
 from config.settings import get_settings
 
-
 DEFAULT_ALIASES_FILE = "input/config/accounts_aliases.txt.example"
 
 
@@ -41,7 +40,7 @@ class AccountsAliases:
 
                 self.aliasesMap[identifier] = alias
 
-    def __init__(self, aliases_file = None):
+    def __init__(self, aliases_file=None):
 
         self._settings = get_settings()
 

@@ -26,11 +26,12 @@ class StatementConvertion(Convertion):
         row = heading
         while row != StatementConvertion.HEADER:
             row = next(csv_reader)
-        row = next(csv_reader)
 
+        row = next(csv_reader)
         transactions = []
 
         for row in csv_reader:
+
             date = row[0]
             description = row[1]
             value = float(row[2].replace(",", ""))

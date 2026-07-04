@@ -17,7 +17,7 @@ class Convertion(ABC):
     def convert(
         self,
         heading: str,
-        csv_reading: DictReader,
+        csv_reader: DictReader,
     ) -> list[Transaction]:
         """
         Conversion of file into transaction list.

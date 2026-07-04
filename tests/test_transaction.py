@@ -1,7 +1,5 @@
-import unittest
-
 from src.transaction import Transaction
-
+from tests.conf_log_test import BaseTestCase
 
 TEST_DATE = "02/21/2025"
 TEST_DESCRIPTION = "TEST DESCRIPTION"
@@ -9,7 +7,11 @@ TEST_PAYEE = "Expenses:Don't know"
 TEST_ACCOUNT = "Bank:Checking"
 
 
-class TestTransaction(unittest.TestCase):
+class TestTransaction(BaseTestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
     def test_shouldCreatePurchaseTransaction(self):
 

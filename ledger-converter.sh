@@ -1,19 +1,10 @@
 # ======================================
-# Load Configurations
-# ======================================
-CONFIG_FILE=./config.sh
-if [[ ! -f $CONFIG_FILE ]]; then
-    echo "Configuration file not found; Using example file"
-    CONFIG_FILE="${CONFIG_FILE}.example"
-fi
-source $CONFIG_FILE
-echo ""
-
-# ======================================
 # Functions
 # ======================================
 
 runLedgerConverter() {
+    echo "Running Ledger Converter"
+
     # Activate environment to run code
     source venv/bin/activate
 
@@ -25,6 +16,8 @@ runLedgerConverter() {
 }
 
 runTests() {
+    echo "Running Ledger Converter Tests"
+
     # Activate environment to run code
     source venv/bin/activate
 
@@ -36,14 +29,12 @@ runTests() {
 }
 
 runLedgerAccounts() {
-    DEFAULT_LEDGER_FILE="./tests/ledger_test.ledger"
-    OUTPUT_ACCOUNT_FILE="./input/config/accounts.txt"
+    echo "Running Ledger Account Export"
 
-    if [[ $LEDGER_FILE == $DEFAULT_LEDGER_FILE ]]; then
-        OUTPUT_ACCOUNT_FILE="${OUTPUT_ACCOUNT_FILE}.example"
-    fi
+    echo "Loading environment variables"
+    source .env
 
-    ledger -f $LEDGER_FILE accounts > $OUTPUT_ACCOUNT_FILE
+    ledger -f $LEDGER_FILE accounts > $ACCOUNTS_FILE
 }
 
 printUsage() {

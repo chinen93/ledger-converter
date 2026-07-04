@@ -1,12 +1,15 @@
-import unittest
-
 from src.accounts import DEFAULT_ACCOUNTS_FILE, Accounts
 from src.accountsAliases import DEFAULT_ALIASES_FILE
+from tests.conf_log_test import BaseTestCase
 
 
-class TestAccounts(unittest.TestCase):
+class TestAccounts(BaseTestCase):
 
     accounts = None
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
     def setUp(self):
         self.accounts = Accounts(

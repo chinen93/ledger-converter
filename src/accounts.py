@@ -4,7 +4,6 @@ from pprint import pformat
 
 from src.accountsAliases import DEFAULT_ALIASES_FILE, AccountsAliases
 
-
 DEFAULT_ACCOUNTS_FILE = "input/config/accounts.txt.example"
 
 
@@ -50,7 +49,7 @@ class Accounts:
         accounts_file: str = DEFAULT_ACCOUNTS_FILE,
         aliases_file: str = DEFAULT_ALIASES_FILE,
     ):
-        self.accountsMap = {}
+        self.accountsMap: dict[str, dict[str, str]] = {}
         self.aliases = AccountsAliases(aliases_file)
 
         self._load_file(accounts_file)

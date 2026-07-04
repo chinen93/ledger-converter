@@ -8,7 +8,7 @@ def main() -> None:
     """
     Main program function
     """
-    setup_logging(testing=False)    
+    setup_logging(testing=False)
 
     log = getLogger(__name__)
     log.info("Program started")

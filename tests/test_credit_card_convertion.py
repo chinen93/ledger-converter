@@ -1,30 +1,34 @@
 import csv
 import os
-import unittest
 from datetime import datetime
 
 from src.accounts import Accounts
 from src.convertions.creditCardConvertion import CreditCardConvertion
-
+from tests.conf_log_test import BaseTestCase
 
 CREDIT_CARD_FILENAME = "tests/test_inputs/test_creditCard.csv"
 ACCOUNT_CREDIT = "Bank:CreditCard"
 PAYEE_DEFAULT = "Expenses:Don't know"
 LIABILITY_DEFAULT = "Liability:Don't know"
 
-accounts = Accounts()
 
-
-class TestCreditCardConvertion(unittest.TestCase):
+class TestCreditCardConvertion(BaseTestCase):
     currentDir = os.getcwd()
     csv_reader = None
     file = None
     converter = None
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
     def setUp(self):
+        accounts = Accounts()
+
         filename = os.path.join(self.currentDir, CREDIT_CARD_FILENAME)
         self.file = open(filename, newline="")
         self.csv_reader = csv.reader(self.file, delimiter=",", quotechar='"')
+
         self.converter = CreditCardConvertion(accounts)
 
     def tearDown(self):
