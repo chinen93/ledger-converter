@@ -2,7 +2,7 @@ import csv
 import os
 from datetime import datetime
 
-from src.accounts import Accounts
+from src.accounts.accounts import Accounts
 from src.convertions.creditCardConvertion import CreditCardConvertion
 from tests.conf_log_test import BaseTestCase
 

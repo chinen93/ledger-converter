@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
 from csv import DictReader
 
-from src.transaction import Transaction
+from src.models.transaction import Transaction
 
 
-class Convertion(ABC):
+class ConversionStrategy(ABC):
 
     @abstractmethod
     def canConvert(self, heading: str) -> bool:

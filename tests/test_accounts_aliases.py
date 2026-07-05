@@ -1,4 +1,4 @@
-from src.accountsAliases import DEFAULT_ALIASES_FILE, AccountsAliases
+from src.accounts.accountsAliases import DEFAULT_ALIASES_FILE, AccountsAliases
 from tests.conf_log_test import BaseTestCase
 
 

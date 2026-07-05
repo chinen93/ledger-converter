@@ -1,4 +1,4 @@
-from src.transaction import Transaction
+from src.models.transaction import Transaction
 from tests.conf_log_test import BaseTestCase
 
 TEST_DATE = "02/21/2025"

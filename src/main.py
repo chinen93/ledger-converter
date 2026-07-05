@@ -1,5 +1,5 @@
 from config.logging import setup_logging, get_logger
-from src.file import HandleTransactions
+from src.files.file import LedgerConversionWorkflow
 
 
 def main() -> None:
@@ -11,12 +11,12 @@ def main() -> None:
     log = get_logger(__name__)
     log.info("Program started")
 
-    handleTransactions = HandleTransactions()
+    workflow = LedgerConversionWorkflow()
 
     log.info("Get Transactions")
-    transactions = handleTransactions.getTransactions()
+    transactions = workflow.loadTransactions()
 
     log.info("Output Transactions in the Right Format")
-    handleTransactions.saveTransactions(transactions)
+    workflow.saveTransactions(transactions)
 
     log.info("Program Ended")

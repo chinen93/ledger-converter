@@ -2,7 +2,7 @@ import os
 from pprint import pformat
 
 from config.logging import get_logger
-from src.accountsAliases import DEFAULT_ALIASES_FILE, AccountsAliases
+from src.accounts.accountsAliases import DEFAULT_ALIASES_FILE, AccountsAliases
 
 DEFAULT_ACCOUNTS_FILE = "input/config/accounts.txt.example"
 

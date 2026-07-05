@@ -2,7 +2,7 @@ import csv
 import os
 from datetime import datetime
 
-from src.accounts import Accounts
+from src.accounts.accounts import Accounts
 from src.convertions.statementConvertion import StatementConvertion
 from tests.conf_log_test import BaseTestCase
 

@@ -3,14 +3,14 @@ import os
 
 from config.logging import get_logger
 from config.settings import get_settings
-from src.accounts import Accounts
-from src.convertions.convertion import Convertion
+from src.accounts.accounts import Accounts
+from src.convertions.convertion import ConversionStrategy
 from src.convertions.creditCardConvertion import CreditCardConvertion
 from src.convertions.statementConvertion import StatementConvertion
-from src.transaction import Transaction
+from src.models.transaction import Transaction
 
 
-class HandleTransactions:
+class LedgerConversionWorkflow:
 
     def __init__(self):
         self._settings = get_settings()
@@ -18,7 +18,7 @@ class HandleTransactions:
 
     def _chooseConvertion(
         self,
-        converters: list[Convertion],
+        converters: list[ConversionStrategy],
         csv_reader: csv.DictReader,
     ) -> list[Transaction]:
         """
@@ -37,7 +37,7 @@ class HandleTransactions:
 
         return []
 
-    def _readFile(self, converters: list[Convertion], filename: str) -> list[Transaction]:
+    def _readFile(self, converters: list[ConversionStrategy], filename: str) -> list[Transaction]:
         """
         Get transactions from 'filename' using one of the 'converters'
 
@@ -55,7 +55,7 @@ class HandleTransactions:
 
         return transactions
 
-    def getTransactions(self) -> list[Transaction]:
+    def loadTransactions(self) -> list[Transaction]:
         """
         Retrieve all transactions from 'config.INPUT_FOLDER' folder
 
