@@ -76,7 +76,6 @@ def configure_root_logger() -> None:
         fh.setFormatter(formatter)
         root.addHandler(fh)
 
-    root.info("=" * 30)
     root.debug(f"ENV FILE: '{settings.ENV_FILEPATH}'")
 
 

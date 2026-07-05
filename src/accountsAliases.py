@@ -1,7 +1,7 @@
-import logging
 import os
 from pprint import pformat
 
+from config.logging import get_logger
 from config.settings import get_settings
 
 DEFAULT_ALIASES_FILE = "input/config/accounts_aliases.txt.example"
@@ -52,7 +52,7 @@ class AccountsAliases:
 
         self._load_file(aliases_file)
 
-        logger = logging.getLogger(__name__)
+        logger = get_logger(__name__)
         logger.debug(pformat(self.aliasesMap))
 
     def hasAlias(self, identifier: str) -> bool:

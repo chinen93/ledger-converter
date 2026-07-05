@@ -1,6 +1,4 @@
-from logging import getLogger
-
-from config.logging import setup_logging
+from config.logging import setup_logging, get_logger
 from src.file import HandleTransactions
 
 
@@ -10,7 +8,7 @@ def main() -> None:
     """
     setup_logging(testing=False)
 
-    log = getLogger(__name__)
+    log = get_logger(__name__)
     log.info("Program started")
 
     handleTransactions = HandleTransactions()

@@ -1,7 +1,7 @@
 import csv
 import os
-from logging import getLogger
 
+from config.logging import get_logger
 from config.settings import get_settings
 from src.accounts import Accounts
 from src.convertions.convertion import Convertion
@@ -14,7 +14,7 @@ class HandleTransactions:
 
     def __init__(self):
         self._settings = get_settings()
-        self.log = getLogger(__name__)
+        self.log = get_logger(__name__)
 
     def _chooseConvertion(
         self,
@@ -47,7 +47,6 @@ class HandleTransactions:
 
         transactions = []
 
-        self.log.info("=" * 50)
         self.log.info(f"Reading Transactions from: '{filename}'")
 
         with open(filename, newline="") as csvfile:
@@ -91,7 +90,6 @@ class HandleTransactions:
                 transactions.extend(self._readFile(converters, filename))
 
         transactions.sort(key=lambda x: x.date)
-
         return transactions
 
     def saveTransactions(self, transactions: list[Transaction]) -> None:

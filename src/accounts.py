@@ -1,7 +1,7 @@
-import logging
 import os
 from pprint import pformat
 
+from config.logging import get_logger
 from src.accountsAliases import DEFAULT_ALIASES_FILE, AccountsAliases
 
 DEFAULT_ACCOUNTS_FILE = "input/config/accounts.txt.example"
@@ -54,7 +54,7 @@ class Accounts:
 
         self._load_file(accounts_file)
 
-        logger = logging.getLogger(__name__)
+        logger = get_logger(__name__)
         logger.debug(pformat(self.accountsMap))
 
     def hasAccount(self, accountType: str, identifier: str) -> bool:
@@ -95,7 +95,7 @@ class Accounts:
                 identifier_parts.pop()
 
         # When DEFAULT_UNKOWN is used I need to save it and possibly add an ALIAS for it
-        logger = logging.getLogger(__name__)
-        logger.info(identifier)
+        logger = get_logger(__name__)
+        logger.debug(identifier)
 
         return f"{accountType}:{self.DEFAULT_UNKNOWN}"
