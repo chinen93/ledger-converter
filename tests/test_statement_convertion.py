@@ -3,7 +3,7 @@ import os
 from datetime import datetime
 
 from src.accounts.accounts import Accounts
-from src.convertions.statementConvertion import StatementConvertion
+from src.convertions.convertionStatement import StatementConvertion
 from tests.conf_log_test import BaseTestCase
 
 STATEMENT_FILENAME = "tests/test_inputs/test_statement.csv"

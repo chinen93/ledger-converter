@@ -1,11 +1,11 @@
 from csv import DictReader
 
 from src.accounts.accounts import Accounts
-from src.convertions.convertion import ConversionStrategy
+from src.convertions.convertion import ConvertionStrategy
 from src.models.transaction import Transaction
 
 
-class CreditCardConvertion(ConversionStrategy):
+class CreditCardConvertion(ConvertionStrategy):
 
     HEADER = ["Posted Date", "Reference Number", "Payee", "Address", "Amount"]
 

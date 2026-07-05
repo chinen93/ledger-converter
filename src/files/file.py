@@ -4,9 +4,12 @@ import os
 from config.logging import get_logger
 from config.settings import get_settings
 from src.accounts.accounts import Accounts
-from src.convertions.convertion import ConversionStrategy
-from src.convertions.creditCardConvertion import CreditCardConvertion
-from src.convertions.statementConvertion import StatementConvertion
+from src.convertions.convertion import ConvertionStrategy
+from src.convertions.convertionCreditCard import CreditCardConvertion
+from src.convertions.convertionStatement import StatementConvertion
+from src.convertions.pipeline import ConvertionPipeline
+from src.files.csv import ReadCSV
+from src.files.discover import Discover
 from src.models.transaction import Transaction
 
 
@@ -18,7 +21,7 @@ class LedgerConversionWorkflow:
 
     def _chooseConvertion(
         self,
-        converters: list[ConversionStrategy],
+        converters: list[ConvertionStrategy],
         csv_reader: csv.DictReader,
     ) -> list[Transaction]:
         """
@@ -37,7 +40,7 @@ class LedgerConversionWorkflow:
 
         return []
 
-    def _readFile(self, converters: list[ConversionStrategy], filename: str) -> list[Transaction]:
+    def _readFile(self, converters: list[ConvertionStrategy], filename: str) -> list[Transaction]:
         """
         Get transactions from 'filename' using one of the 'converters'
 
@@ -70,24 +73,26 @@ class LedgerConversionWorkflow:
         assert aliases_files is not None
 
         accounts = Accounts(accounts_file, aliases_files)
+
+        # convertionPipeline = ConvertionPipeline(accounts)
+
         converters = [StatementConvertion(accounts), CreditCardConvertion(accounts)]
         self.log.debug(
             f"List of Converters: {[obj.__class__.__name__ for obj in converters]}",
         )
 
-        input_folder = self._settings.INPUT_FOLDER
-        assert input_folder is not None
-
-        # Getting the current work directory (cwd)
-        currentDir = os.getcwd()
-        inputDir = currentDir + input_folder
+        discover = Discover()
+        filenames = discover.discoverFilenames()
+        csv_reader = ReadCSV()
 
         transactions = []
+        for filename in filenames:
+            
+            csv_reader.readFile(filename)
+            print(csv_reader.line)
+            csv_reader.close()
 
-        for filename in os.listdir(inputDir):
-            if filename.endswith(".csv"):
-                filename = os.path.join(inputDir, filename)
-                transactions.extend(self._readFile(converters, filename))
+            transactions.extend(self._readFile(converters, filename))
 
         transactions.sort(key=lambda x: x.date)
         return transactions

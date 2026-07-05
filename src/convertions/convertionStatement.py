@@ -1,11 +1,11 @@
 from csv import DictReader
 
 from src.accounts.accounts import Accounts
-from src.convertions.convertion import ConversionStrategy
+from src.convertions.convertion import ConvertionStrategy
 from src.models.transaction import Transaction
 
 
-class StatementConvertion(ConversionStrategy):
+class StatementConvertion(ConvertionStrategy):
 
     FIRST_LINE = ["Description", "", "Summary Amt."]
     HEADER = ["Date", "Description", "Amount", "Running Bal."]
