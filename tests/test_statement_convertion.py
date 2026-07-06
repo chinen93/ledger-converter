@@ -41,10 +41,7 @@ class TestStatementConvertion(BaseTestCase):
         self.assertTrue(self.converter.canConvert(csv_headings))
 
     def test_shouldChooseStatementConversion(self):
-        # Read the Headings
-        heading = self.csv_reader.headings
-
-        transactions = self.converter.convert(heading, self.csv_reader)
+        transactions = self.converter.convert(self.csv_reader)
 
         self.assertEqual(len(transactions), 3)
 

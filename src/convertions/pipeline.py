@@ -9,12 +9,13 @@ from src.models.transaction import Transaction
 
 class ConvertionPipeline:
 
+    STRATEGIES = (StatementConvertion, CreditCardConvertion)
+
     def __init__(self, accounts: AccountsManager):
         self.log = get_logger(__name__)
-        self.strategies: list[ConvertionStrategy] = []
-
-        self.strategies.append(StatementConvertion(accounts))
-        self.strategies.append(CreditCardConvertion(accounts))
+        self.strategies: list[ConvertionStrategy] = [
+            strategy_class(accounts) for strategy_class in self.STRATEGIES
+        ]
 
         self.log.debug(
             f"List of Converters: {[obj.__class__.__name__ for obj in self.strategies]}",
@@ -28,6 +29,6 @@ class ConvertionPipeline:
 
         for converter in self.strategies:
             if converter.canConvert(csv_headings):
-                return converter.convert(csv_headings, csv_reader)
+                return converter.convert(csv_reader)
 
         return transactions
