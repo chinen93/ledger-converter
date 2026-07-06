@@ -1,7 +1,6 @@
-from csv import DictReader
-
 from src.accounts.accounts import Accounts
 from src.convertions.convertion import ConvertionStrategy
+from src.files.csv import ReadCSV
 from src.models.transaction import Transaction
 
 
@@ -12,13 +11,13 @@ class CreditCardConvertion(ConvertionStrategy):
     def __init__(self, accounts: Accounts):
         self.account = accounts
 
-    def canConvert(self, heading: str) -> bool:
+    def canConvert(self, heading: list[str]) -> bool:
         return heading == CreditCardConvertion.HEADER
 
     def convert(
         self,
-        heading: str,
-        csv_reader: DictReader,
+        heading: list[str],
+        csv_reader: ReadCSV,
     ) -> list[Transaction]:
         transactions = []
 

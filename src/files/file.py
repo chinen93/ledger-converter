@@ -1,12 +1,6 @@
-import csv
-import os
-
 from config.logging import get_logger
 from config.settings import get_settings
 from src.accounts.accounts import Accounts
-from src.convertions.convertion import ConvertionStrategy
-from src.convertions.convertionCreditCard import CreditCardConvertion
-from src.convertions.convertionStatement import StatementConvertion
 from src.convertions.pipeline import ConvertionPipeline
 from src.files.csv import ReadCSV
 from src.files.discover import Discover
@@ -18,45 +12,6 @@ class LedgerConversionWorkflow:
     def __init__(self):
         self._settings = get_settings()
         self.log = get_logger(__name__)
-
-    def _chooseConvertion(
-        self,
-        converters: list[ConvertionStrategy],
-        csv_reader: csv.DictReader,
-    ) -> list[Transaction]:
-        """
-        Return transactions from csv.
-
-        Choose which converter to use based on the content of the file heading.
-
-        Returns:
-        list[Transaction]: transactions as order in the file
-        """
-        csv_headings = next(csv_reader)
-
-        for converter in converters:
-            if converter.canConvert(csv_headings):
-                return converter.convert(csv_headings, csv_reader)
-
-        return []
-
-    def _readFile(self, converters: list[ConvertionStrategy], filename: str) -> list[Transaction]:
-        """
-        Get transactions from 'filename' using one of the 'converters'
-
-        Returns:
-        list[Transaction]: Transactions from the 'filename' or empty
-        """
-
-        transactions = []
-
-        self.log.info(f"Reading Transactions from: '{filename}'")
-
-        with open(filename, newline="") as csvfile:
-            csv_reader = csv.reader(csvfile, delimiter=",", quotechar='"')
-            transactions.extend(self._chooseConvertion(converters, csv_reader))
-
-        return transactions
 
     def loadTransactions(self) -> list[Transaction]:
         """
@@ -73,13 +28,7 @@ class LedgerConversionWorkflow:
         assert aliases_files is not None
 
         accounts = Accounts(accounts_file, aliases_files)
-
-        # convertionPipeline = ConvertionPipeline(accounts)
-
-        converters = [StatementConvertion(accounts), CreditCardConvertion(accounts)]
-        self.log.debug(
-            f"List of Converters: {[obj.__class__.__name__ for obj in converters]}",
-        )
+        convertionPipeline = ConvertionPipeline(accounts)
 
         discover = Discover()
         filenames = discover.discoverFilenames()
@@ -87,12 +36,10 @@ class LedgerConversionWorkflow:
 
         transactions = []
         for filename in filenames:
-            
-            csv_reader.readFile(filename)
-            print(csv_reader.line)
-            csv_reader.close()
 
-            transactions.extend(self._readFile(converters, filename))
+            csv_reader.readFile(filename)
+            transactions.extend(convertionPipeline.convert(csv_reader))
+            csv_reader.close()
 
         transactions.sort(key=lambda x: x.date)
         return transactions

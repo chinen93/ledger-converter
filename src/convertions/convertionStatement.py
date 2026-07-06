@@ -1,7 +1,6 @@
-from csv import DictReader
-
 from src.accounts.accounts import Accounts
 from src.convertions.convertion import ConvertionStrategy
+from src.files.csv import ReadCSV
 from src.models.transaction import Transaction
 
 
@@ -13,21 +12,17 @@ class StatementConvertion(ConvertionStrategy):
     def __init__(self, accounts: Accounts):
         self.account = accounts
 
-    def canConvert(self, heading: str) -> bool:
+    def canConvert(self, heading: list[str]) -> bool:
         return heading == StatementConvertion.FIRST_LINE
 
     def convert(
         self,
-        heading: str,
-        csv_reader: DictReader,
+        heading: list[str],
+        csv_reader: ReadCSV,
     ) -> list[Transaction]:
 
-        # Move reader cursor until the beginning of data
-        row = heading
-        while row != StatementConvertion.HEADER:
-            row = next(csv_reader)
+        csv_reader.moveBeginData(StatementConvertion.HEADER)
 
-        row = next(csv_reader)
         transactions = []
 
         for row in csv_reader:

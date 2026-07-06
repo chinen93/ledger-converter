@@ -1,9 +1,9 @@
-import csv
 import os
 from datetime import datetime
 
 from src.accounts.accounts import Accounts
 from src.convertions.convertionCreditCard import CreditCardConvertion
+from src.files.csv import ReadCSV
 from tests.conf_log_test import BaseTestCase
 
 CREDIT_CARD_FILENAME = "tests/test_inputs/test_creditCard.csv"
@@ -23,24 +23,24 @@ class TestCreditCardConvertion(BaseTestCase):
         super().setUpClass()
 
     def setUp(self):
-        accounts = Accounts()
+        self.csv_reader = ReadCSV()
 
         filename = os.path.join(self.currentDir, CREDIT_CARD_FILENAME)
-        self.file = open(filename, newline="")
-        self.csv_reader = csv.reader(self.file, delimiter=",", quotechar='"')
+        self.csv_reader.readFile(filename)
 
+        accounts = Accounts()
         self.converter = CreditCardConvertion(accounts)
 
     def tearDown(self):
-        self.file.close()
+        self.csv_reader.close()
 
     def test_shouldConfirmThatCanConvert(self):
-        csv_headings = next(self.csv_reader)
+        csv_headings = self.csv_reader.headings
         self.assertTrue(self.converter.canConvert(csv_headings))
 
     def test_shouldChooseCreditCardConversion(self):
         # Read the Headings
-        heading = next(self.csv_reader)
+        heading = self.csv_reader.headings
 
         transactions = self.converter.convert(heading, self.csv_reader)
 

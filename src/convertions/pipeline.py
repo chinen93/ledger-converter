@@ -1,4 +1,3 @@
-
 from config.logging import get_logger
 from src.accounts.accounts import Accounts
 from src.convertions.convertion import ConvertionStrategy
@@ -8,8 +7,8 @@ from src.files.csv import ReadCSV
 from src.models.transaction import Transaction
 
 
-class ConvertionPipeline():
-    
+class ConvertionPipeline:
+
     def __init__(self, accounts: Accounts):
         self.log = get_logger(__name__)
         self.strategies: list[ConvertionStrategy] = []
@@ -22,10 +21,10 @@ class ConvertionPipeline():
         )
 
     def convert(self, csv_reader: ReadCSV) -> list[Transaction]:
-        
+
         transactions: list[Transaction] = []
 
-        csv_headings = csv_reader.line
+        csv_headings = csv_reader.headings
 
         for converter in self.strategies:
             if converter.canConvert(csv_headings):

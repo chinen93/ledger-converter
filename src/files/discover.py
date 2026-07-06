@@ -1,12 +1,10 @@
-
-
 import os
 
 from config.logging import get_logger
 from config.settings import get_settings
 
 
-class Discover():
+class Discover:
 
     def __init__(self):
         self._settings = get_settings()
@@ -17,7 +15,7 @@ class Discover():
 
         # Getting the current work directory (cwd)
         currentDir = os.getcwd()
-        self.input_folder: str = currentDir + input_folder
+        self.input_folder = currentDir + input_folder
 
     def discoverFilenames(self) -> list[str]:
         filenames: list[str] = []
