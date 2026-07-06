@@ -1,5 +1,5 @@
 from config.logging import get_logger
-from src.accounts.accounts import Accounts
+from src.accounts.accounts import AccountsManager
 from src.convertions.convertion import ConvertionStrategy
 from src.convertions.convertionCreditCard import CreditCardConvertion
 from src.convertions.convertionStatement import StatementConvertion
@@ -9,7 +9,7 @@ from src.models.transaction import Transaction
 
 class ConvertionPipeline:
 
-    def __init__(self, accounts: Accounts):
+    def __init__(self, accounts: AccountsManager):
         self.log = get_logger(__name__)
         self.strategies: list[ConvertionStrategy] = []
 

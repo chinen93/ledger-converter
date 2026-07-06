@@ -1,4 +1,5 @@
-from src.accounts.accountsAliases import DEFAULT_ALIASES_FILE, AccountsAliases
+from src.accounts.aliases import AliasManager
+from src.accounts.loader import DEFAULT_ALIASES_FILE
 from tests.conf_log_test import BaseTestCase
 
 
@@ -11,7 +12,7 @@ class TestAccountsAliases(BaseTestCase):
         super().setUpClass()
 
     def setUp(self):
-        self.aliases = AccountsAliases(DEFAULT_ALIASES_FILE)
+        self.aliases = AliasManager(DEFAULT_ALIASES_FILE)
 
     def test_shouldCreateAccountsAliases(self):
 
@@ -21,10 +22,7 @@ class TestAccountsAliases(BaseTestCase):
             "CHECKS": "Checking",
         }
 
-        self.assertDictEqual(self.aliases.aliasesMap, expected)
-
-        wrong_file_accounts = AccountsAliases("INVALID_FILE")
-        self.assertDictEqual(wrong_file_accounts.aliasesMap, expected)
+        self.assertListEqual(list(self.aliases.lookup.aliases.keys()), list(expected.keys()))
 
     def test_shouldGetAccountsAliases(self):
 

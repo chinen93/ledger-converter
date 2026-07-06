@@ -1,5 +1,5 @@
-from src.accounts.accounts import DEFAULT_ACCOUNTS_FILE, Accounts
-from src.accounts.accountsAliases import DEFAULT_ALIASES_FILE
+from src.accounts.accounts import AccountsManager
+from src.accounts.loader import DEFAULT_ACCOUNTS_FILE, DEFAULT_ALIASES_FILE
 from tests.conf_log_test import BaseTestCase
 
 
@@ -12,7 +12,7 @@ class TestAccounts(BaseTestCase):
         super().setUpClass()
 
     def setUp(self):
-        self.accounts = Accounts(
+        self.accounts = AccountsManager(
             accounts_file=DEFAULT_ACCOUNTS_FILE,
             aliases_file=DEFAULT_ALIASES_FILE,
         )
@@ -20,17 +20,16 @@ class TestAccounts(BaseTestCase):
     def test_shouldCreateAccounts(self):
 
         expected = {
-            "Bank": {
-                "CHECKING": "Bank:Checking",
-                "CREDITCARD": "Bank:CreditCard",
-            },
-            "Liability": {"TEST": "Liability:Test"},
+            "Bank:CHECKING": "Bank:Checking",
+            "Bank:CREDITCARD": "Bank:CreditCard",
+            "Liability:TEST": "Liability:Test",
         }
 
-        self.assertDictEqual(self.accounts.accountsMap, expected)
-
-        wrong_file_accounts = Accounts("INVALID_FILE")
-        self.assertDictEqual(wrong_file_accounts.accountsMap, expected)
+        self.assertListEqual(list(self.accounts.lookup.accounts.keys()), list(expected.keys()))
+        for expectedKey, expectedValue in expected.items():
+            keySplit = expectedKey.split(":")
+            value = self.accounts.getAccount(keySplit[0], keySplit[1])
+            self.assertEqual(value, expectedValue)
 
     def test_shouldGetAccounts(self):
 

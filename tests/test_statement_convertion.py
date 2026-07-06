@@ -1,7 +1,8 @@
 import os
 from datetime import datetime
 
-from src.accounts.accounts import Accounts
+from src.accounts.accounts import AccountsManager
+from src.accounts.loader import DEFAULT_ACCOUNTS_FILE, DEFAULT_ALIASES_FILE
 from src.convertions.convertionStatement import StatementConvertion
 from src.files.csv import ReadCSV
 from tests.conf_log_test import BaseTestCase
@@ -29,7 +30,7 @@ class TestStatementConvertion(BaseTestCase):
         filename = os.path.join(self.currentDir, STATEMENT_FILENAME)
         self.csv_reader.readFile(filename)
 
-        accounts = Accounts()
+        accounts = AccountsManager(DEFAULT_ACCOUNTS_FILE, DEFAULT_ALIASES_FILE)
         self.converter = StatementConvertion(accounts)
 
     def tearDown(self):

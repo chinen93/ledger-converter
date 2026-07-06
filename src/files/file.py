@@ -1,6 +1,6 @@
 from config.logging import get_logger
 from config.settings import get_settings
-from src.accounts.accounts import Accounts
+from src.accounts.accounts import AccountsManager
 from src.convertions.pipeline import ConvertionPipeline
 from src.files.csv import ReadCSV
 from src.files.discover import Discover
@@ -27,7 +27,7 @@ class LedgerConversionWorkflow:
         aliases_files = self._settings.ALIASES_FILE
         assert aliases_files is not None
 
-        accounts = Accounts(accounts_file, aliases_files)
+        accounts = AccountsManager(accounts_file, aliases_files)
         convertionPipeline = ConvertionPipeline(accounts)
 
         discover = Discover()

@@ -1,4 +1,4 @@
-from src.accounts.accounts import Accounts
+from src.accounts.accounts import AccountsManager
 from src.convertions.convertion import ConvertionStrategy
 from src.files.csv import ReadCSV
 from src.models.transaction import Transaction
@@ -9,7 +9,7 @@ class StatementConvertion(ConvertionStrategy):
     FIRST_LINE = ["Description", "", "Summary Amt."]
     HEADER = ["Date", "Description", "Amount", "Running Bal."]
 
-    def __init__(self, accounts: Accounts):
+    def __init__(self, accounts: AccountsManager):
         self.account = accounts
 
     def canConvert(self, heading: list[str]) -> bool:
@@ -36,11 +36,11 @@ class StatementConvertion(ConvertionStrategy):
                 value = value * -1
 
                 account = self.account.getAccount(
-                    Accounts.DEFAULT_BANK,
+                    AccountsManager.DEFAULT_BANK,
                     "Checking",
                 )
                 payee = self.account.getAccount(
-                    Accounts.DEFAULT_EXPENSES,
+                    AccountsManager.DEFAULT_EXPENSES,
                     description,
                 )
 
@@ -48,11 +48,11 @@ class StatementConvertion(ConvertionStrategy):
             else:
                 self.value = value
                 account = self.account.getAccount(
-                    Accounts.DEFAULT_LIABILITY,
+                    AccountsManager.DEFAULT_LIABILITY,
                     description,
                 )
                 payee = self.account.getAccount(
-                    Accounts.DEFAULT_BANK,
+                    AccountsManager.DEFAULT_BANK,
                     "Checking",
                 )
 
