@@ -15,6 +15,28 @@ runLedgerConverter() {
     deactivate
 }
 
+runLedgerReports() {
+
+    # Get all Accounts
+    runLedgerAccounts
+    echo
+
+    # Export Ledger File
+    runExportLedgerToCSV
+    echo
+
+    echo "Running Ledger Reports"
+
+    # Activate environment to run code
+    source venv/bin/activate
+
+    # Run code
+    python3 ledger-tool.py --report
+
+    # Deactivate environment
+    deactivate
+}
+
 runTests() {
     echo "Running Ledger Converter Tests"
 
@@ -35,6 +57,15 @@ runLedgerAccounts() {
     source .env
 
     ledger -f $LEDGER_FILE accounts > $ACCOUNTS_FILE
+}
+
+runExportLedgerToCSV() {
+    echo "Runnig Ledger Export to CSV for Reports"
+
+    echo "Loading environment variables"
+    source .env
+
+    ledger -f $LEDGER_FILE csv > $EXPORT_CSV_FILENAME
 }
 
 printUsage() {
@@ -63,7 +94,7 @@ if [ -n "$1" ]; then
             runLedgerConverter
             ;;
         "-r" | "--report")
-            echo "Reports"
+            runLedgerReports
             ;;
         "-t" | "--test")
             runTests

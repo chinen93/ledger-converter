@@ -1,7 +1,11 @@
 # Ledger Converter files
 .DS_Store
 
-input/
+# Input Files
+input/config/
+input/files/
+input/reports/
+
 output.txt
 config.sh
 .env
