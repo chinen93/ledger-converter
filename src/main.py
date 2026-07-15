@@ -1,5 +1,5 @@
 from config.logging import setup_logging, get_logger
-from src.workflows import LedgerConversionWorkflow
+from src.workflows import LedgerConversionWorkflow, LedgerReportWorkflow
 
 def mainConverter() -> None:
     """
@@ -28,5 +28,9 @@ def mainReports() -> None:
 
     log = get_logger(__name__)
     log.info("Report Program Started")
+
+    workflow = LedgerReportWorkflow()
+
+    workflow.reportOverview()
 
     log.info("Program Ended")

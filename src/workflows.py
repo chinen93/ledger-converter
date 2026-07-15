@@ -5,6 +5,7 @@ from src.convertions.pipeline import ConvertionPipeline
 from src.files.csv import ReadCSV
 from src.files.discover import Discover
 from src.models.transaction import Transaction
+from src.reports.data import Data
 
 
 class LedgerConversionWorkflow:
@@ -64,6 +65,8 @@ class LedgerReportWorkflow:
     def __init__(self):
         self._settings = get_settings()
         self.log = get_logger(__name__)
+
+        self.data = Data()
 
     def reportOverview(self):
         pass

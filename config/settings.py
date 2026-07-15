@@ -83,20 +83,6 @@ def get_settings():  # type: ignore
 
         All settings are loaded from environment variables at startup.
         The class is frozen to prevent accidental modification of settings.
-
-        Attributes:
-            ENV_FILEPATH: Path to the .env file being used.
-            ENVIRONMENT: Current environment (e.g., 'development', 'production').
-            LOG_LEVEL: Logging verbosity level (e.g., 'INFO', 'DEBUG', 'ERROR').
-            LOG_FORMAT: Log message format string.
-            LOG_FILE: Path to log file.
-            LOG_TO_CONSOLE: Whether to output logs to console.
-            DATABASE_URL: SQLAlchemy database connection URL.
-            DATA_DIR: Directory for data files.
-            AGENT_MODEL: LLM model identifier for Ollama.
-            MATCH_THRESHOLD: Minimum score threshold for job/STAR matching.
-            LLM_WEIGHT: LLM weight on job/STAR matching
-            TEXT_WEIGHT: text weight on job/STAR matching
         """
 
         ENV_FILEPATH: str = ENV_FILEPATH  # type: ignore
@@ -113,6 +99,8 @@ def get_settings():  # type: ignore
         ALIASES_FILE: Optional[str] = os.getenv("ALIASES_FILE")  # type: ignore
         ACCOUNTS_FILE: Optional[str] = os.getenv("ACCOUNTS_FILE")  # type: ignore
 
+        EXPORT_CSV_FILENAME: Optional[str] = os.getenv("EXPORT_CSV_FILENAME")  # type: ignore
+
         def __post_init__(self):
             missing = [
                 key
@@ -127,6 +115,7 @@ def get_settings():  # type: ignore
                     "OUTPUT_FILENAME": self.OUTPUT_FILENAME,
                     "ALIASES_FILE": self.ALIASES_FILE,
                     "ACCOUNTS_FILE": self.ACCOUNTS_FILE,
+                    "EXPORT_CSV_FILENAME": self.EXPORT_CSV_FILENAME,
                 }.items()
                 if value is None or (isinstance(value, str) and not value.strip())
             ]
