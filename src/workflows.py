@@ -57,3 +57,19 @@ class LedgerConversionWorkflow:
                 file.write(transaction.exportString())
 
         self.log.info(f"Wrote Transactions to: '{output_filename}'")
+
+
+class LedgerReportWorkflow:
+
+    def __init__(self):
+        self._settings = get_settings()
+        self.log = get_logger(__name__)
+
+    def reportOverview(self):
+        pass
+
+    def reportExpenseCategoriesPercentage(self):
+        pass
+
+    def reportExpenseCategoriesTrend(self):
+        pass

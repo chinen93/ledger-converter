@@ -9,7 +9,7 @@ runLedgerConverter() {
     source venv/bin/activate
 
     # Run code
-    python3 ledger-converter.py
+    python3 ledger-tool.py --convert
 
     # Deactivate environment
     deactivate
@@ -44,7 +44,9 @@ printUsage() {
     echo "Usage: $0 [ARGS]"
     echo ""
     echo "Arguments:"
-    echo "None             : Run Converter"
+    echo "None             : Get Helper"
+    echo "-c | --convert   : Run Conveter"
+    echo "-r | --report    : Run Reports"
     echo "-t | --test      : Run Tests"
     echo "-a | --accounts" : Extract Accounts from Ledger file
     echo "-h | --help      : Get Helper"
@@ -57,6 +59,12 @@ printUsage() {
 
 if [ -n "$1" ]; then
     case "$1" in
+        "-c" | "--convert")
+            runLedgerConverter
+            ;;
+        "-r" | "--report")
+            echo "Reports"
+            ;;
         "-t" | "--test")
             runTests
             ;;
@@ -78,5 +86,4 @@ fi
 # ======================================
 # Default program without arguments
 # ======================================
-
-runLedgerConverter
+printUsage
