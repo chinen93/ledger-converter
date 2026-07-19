@@ -6,7 +6,7 @@ from src.files.csv import ReadCSV
 from src.files.discover import Discover
 from src.models.transaction import Transaction
 from src.reports.data import Data
-from src.reports.report import test_report
+from src.reports.report import Report
 
 
 class LedgerConversionWorkflow:
@@ -67,12 +67,14 @@ class LedgerReportWorkflow:
         self._settings = get_settings()
         self.log = get_logger(__name__)
 
-        self.data = Data()
-        self.data.load()
+        data = Data()
+        data.load()
+        assert data.initial_data is not None
+
+        self.report = Report(data.initial_data)
 
     def reportOverview(self):
-        # Line graph with multiple points
-        test_report()
+        self.report.report_overview()
 
     def reportExpenseCategoriesPercentage(self):
         # Stacked percentage bar graph
