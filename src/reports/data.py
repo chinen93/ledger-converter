@@ -94,6 +94,20 @@ class ManipulateData:
 
     @classmethod
     def forOverviewReport(cls, data: np.ndarray) -> pd.DataFrame:
-        pass
+
+        assert data.shape[1] >= 6
+        # ["2026", "07", "15", "10.0", "AA", "BB", "CC", ... ],
+
+        result = pd.DataFrame(data)
+
+        result[3] = pd.to_numeric(result[3], errors='coerce')
+
+        result = result.drop(columns=2)
+        original_order = result.columns.tolist()
+        grouped_series = result.groupby([0, 1, 4, 5], as_index=False)[3].sum()
+        result = grouped_series.reindex(columns=original_order)
+        result.columns = range(len(original_order))
+
+        return result
 
     

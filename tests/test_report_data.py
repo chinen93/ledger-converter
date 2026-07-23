@@ -24,9 +24,6 @@ class TestReportData(BaseTestCase):
 
         normalized = data._normalizeData(raw_data)
 
-        print(type(normalized[0, 3]))
-        print(type(expected[0, 3]))
-
         self.assertEqual(normalized.shape, expected.shape)
         np.testing.assert_equal(normalized, expected)
 
@@ -43,9 +40,6 @@ class TestReportData(BaseTestCase):
         ])
 
         normalized = data._normalizeData(raw_data)
-
-        print(type(normalized[0, 3]))
-        print(type(expected[0, 3]))
 
         self.assertEqual(normalized.shape, expected.shape)
         np.testing.assert_equal(normalized, expected)
