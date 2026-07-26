@@ -1,28 +1,72 @@
 import numpy as np
 import pandas as pd
-# import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+from matplotlib.ticker import FuncFormatter
+
+
+from config.settings import get_settings
+from src.reports.data import ManipulateData
+import matplotlib.pyplot as plt
 
 
 class Report:
 
     def __init__(self, data: np.ndarray):
-        self.data = pd.DataFrame(data)
+        self.initial_data = data
+        self.settings = get_settings()
 
     def report_overview(self):
-        # # 1. Create data using NumPy
-        # x = np.linspace(0, 10, 100)  # 100 evenly spaced points between 0 and 10
-        # y = np.sin(x)                # Compute the sine of each point
+        reportData = ManipulateData.forOverviewReport(self.initial_data)
 
-        # # 2. Plot the graph
-        # plt.plot(x, y, label="Sine Wave")
+        assert reportData.shape[1] == 3
+        reportData.columns = ["date", "amount", "account"]
+        reportData["date"] = pd.to_datetime(reportData["date"], format="%Y/%m/%d")
 
-        # # 3. Add details
-        # plt.title("My First NumPy Plot")
-        # plt.xlabel("X Axis")
-        # plt.ylabel("Y Axis")
-        # plt.grid(True)
-        # plt.legend()
+        filteredReportData = reportData.loc[~reportData["account"].isin(["Expenses", "Liability"])]
+        pivot = filteredReportData.pivot_table(
+            index="date",
+            columns="account",
+            values="amount",
+            aggfunc="sum",
+            fill_value=0,
+        )
+        running = pivot.cumsum()
 
-        # # 4. Display the graph
-        # plt.show()
-        pass
+        fig, (ax1, ax2) = plt.subplots(
+            2, 1,
+            sharex=True,
+            figsize=(12, 8),
+            gridspec_kw={"height_ratios": [1, 1]}
+        )
+
+        # Savings
+        running["Bank:Saving"].plot(ax=ax1)
+
+        # Checking and Credit Card
+        running[["Bank:Checking", "Bank:CreditCard"]].plot(ax=ax2)
+
+        def thousands(x, pos):
+            if abs(x) >= 1_000_000:
+                return f"{x/1_000_000:.2f}M"
+            elif abs(x) >= 1_000:
+                return f"{x/1_000:.2f}k"
+            return f"{x:.2f}"
+        
+        ax1.set_ylabel("Balance")
+        ax1.grid(True)
+        ax1.yaxis.set_major_formatter(FuncFormatter(thousands))
+        ax1.legend(title="Account")
+    
+        ax2.set_ylabel("Balance")
+        ax2.grid(True)
+        ax2.yaxis.set_major_formatter(FuncFormatter(thousands))
+        ax2.legend(title="Account")
+        ax2.set_xlabel("Date")
+        ax2.xaxis.set_major_formatter(mdates.DateFormatter("%b %Y"))
+        
+
+        fig.suptitle("Running Balance by Account")
+
+        # fig.savefig("running_balance.png", dpi=300, bbox_inches="tight")
+        plt.show()
+        

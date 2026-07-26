@@ -53,18 +53,27 @@ class TestReportManipulateData(BaseTestCase):
 
     def test_shouldManipulateDataForOverviewReport(self):
         normalized_data = np.array([
-            ["2026", "07", "15", "10.0", "AA", "BB"],
-            ["2026", "07", "15", "-10.0", "CC", "DD"],
-            ["2026", "07", "15", "10.0", "EE", "FF"],
-            ["2026", "07", "15", "-10.0", "GG", "HH"],
-            ["2026", "07", "16", "10.0", "AA", "BB"],
-            ["2026", "07", "16", "-10.0", "CC", "DD"],
+            ["2026", "07", "15", "10.0", "Expenses", "AA", ""],
+            ["2026", "07", "15", "-10.0", "Bank", "Checking", ""],
+            ["2026", "07", "15", "10.0", "Expenses", "BB", "CC"],
+            ["2026", "07", "15", "-10.0", "Bank", "CreditCard", ""],
+            ["2026", "07", "16", "10.0", "Expenses", "AA", ""],
+            ["2026", "07", "16", "-10.0", "Bank", "Checking", ""],
+            ["2026", "08", "21", "10.0", "Expenses", "AA", ""],
+            ["2026", "08", "21", "-10.0", "Bank", "Checking", ""],
+            ["2026", "08", "29", "10.0", "Liability", "DD", ""],
+            ["2026", "08", "29", "-10.0", "Bank", "Checking", ""],
         ])
         expected = pd.DataFrame([
-            ["2026", "07", 20.0, "AA", "BB"],
-            ["2026", "07", -20.0, "CC", "DD"],
-            ["2026", "07", 10.0, "EE", "FF"],
-            ["2026", "07", -10.0, "GG", "HH"],
+            ["2026/07/15", -10.0, "Bank:Checking"],
+            ["2026/07/15", -10.0, "Bank:CreditCard"],
+            ["2026/07/15", 20.0, "Expenses"],
+            ["2026/07/16", -10.0, "Bank:Checking"],
+            ["2026/07/16", 10.0, "Expenses"],
+            ["2026/08/21", -10.0, "Bank:Checking"],
+            ["2026/08/21", 10.0, "Expenses"],
+            ["2026/08/29", -10.0, "Bank:Checking"],
+            ["2026/08/29", 10.0, "Liability"],
         ])
 
         result = ManipulateData.forOverviewReport(normalized_data)
