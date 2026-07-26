@@ -1,6 +1,7 @@
 from config.logging import setup_logging, get_logger
 from src.workflows import LedgerConversionWorkflow, LedgerReportWorkflow
 
+
 def mainConverter() -> None:
     """
     Main Converter program function
@@ -19,6 +20,7 @@ def mainConverter() -> None:
     workflow.saveTransactions(transactions)
 
     log.info("Program Ended")
+
 
 def mainReports() -> None:
     """

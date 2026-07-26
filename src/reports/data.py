@@ -4,6 +4,7 @@ from config.settings import get_settings
 import numpy as np
 import pandas as pd
 
+
 class Data:
 
     def __init__(self):
@@ -14,9 +15,9 @@ class Data:
         filename = self.settings.EXPORT_CSV_FILENAME
         assert filename is not None
 
-        readData = pd.read_csv(filename, delimiter=',', header=None)
-        readData.iloc[:, 0] = pd.to_datetime(readData.iloc[:, 0],  errors='coerce').astype(str)
-        value = readData.fillna('')
+        readData = pd.read_csv(filename, delimiter=",", header=None)
+        readData.iloc[:, 0] = pd.to_datetime(readData.iloc[:, 0], errors="coerce").astype(str)
+        value = readData.fillna("")
 
         assert pd.api.types.is_string_dtype(value.iloc[:, 0])
         assert pd.api.types.is_string_dtype(value.iloc[:, 1])
@@ -26,16 +27,16 @@ class Data:
         assert pd.api.types.is_any_real_numeric_dtype(value.iloc[:, 5])
         assert pd.api.types.is_string_dtype(value.iloc[:, 6])
         assert pd.api.types.is_string_dtype(value.iloc[:, 7])
-        
+
         return value.to_numpy()
-    
+
     def _get_price(self, data: np.ndarray) -> np.ndarray:
         assert data.shape[1] == 8
         price = data[:, 5]
 
         return price.reshape(-1, 1)
-    
-    def _get_date_parts(self, data:np.ndarray) -> np.ndarray:
+
+    def _get_date_parts(self, data: np.ndarray) -> np.ndarray:
         assert data.shape[1] == 8
         numEntities = data.shape[0]
 
@@ -44,14 +45,13 @@ class Data:
 
         # Separate each part of the account into the parts of the normalized matrix
         for idx_acc, date in enumerate(date_str):
-            parts = date.split('-')
+            parts = date.split("-")
 
             date_parts[idx_acc, 0] = parts[0]
             date_parts[idx_acc, 1] = parts[1]
             date_parts[idx_acc, 2] = parts[2]
 
         return date_parts
-    
 
     def _get_accounts_parts(self, data: np.ndarray) -> np.ndarray:
         assert data.shape[1] == 8
@@ -60,19 +60,18 @@ class Data:
         # Account still is combined need to break it into individual parts
         accounts = data[:, 3]
         longest_account = str(max(accounts, key=lambda k: len(k.split(":"))))
-        numParts = len(longest_account.split(':'))
+        numParts = len(longest_account.split(":"))
 
         numEntities = data.shape[0]
         accounts_parts = np.empty((numEntities, numParts), dtype=object)
 
         # Separate each part of the account into the parts of the normalized matrix
         for idx_acc, account in enumerate(accounts):
-            parts = str(account).split(':')
+            parts = str(account).split(":")
             for idx_part, part in enumerate(parts):
                 accounts_parts[idx_acc][idx_part] = part
 
         return accounts_parts
-
 
     def _normalizeData(self, data: np.ndarray) -> np.ndarray:
         assert data.shape[1] == 8
@@ -84,7 +83,7 @@ class Data:
         normalized = np.hstack((date_parts, price, accounts_parts))
 
         return normalized
-    
+
     def load(self) -> None:
         raw_data = self._loadRawData()
         self.initial_data = self._normalizeData(raw_data)
@@ -100,23 +99,25 @@ class ManipulateData:
 
         manipulatedData = pd.DataFrame(data)
 
-        manipulatedData[3] = pd.to_numeric(manipulatedData[3], errors='coerce')
+        manipulatedData[3] = pd.to_numeric(manipulatedData[3], errors="coerce")
 
         def account_name(row) -> str:
             parts = row.dropna().astype(str).tolist()
 
             if parts[0] in {"Expenses", "Liability"}:
                 return parts[0]
-            
+
             clean_parts = [part for part in parts if part != ""]
 
             return ":".join(clean_parts)
 
-        manipulatedData = pd.DataFrame({
-            0: manipulatedData[0] + "/" + manipulatedData[1] + "/" + manipulatedData[2] ,
-            1: pd.to_numeric(manipulatedData[3]),
-            2: manipulatedData.iloc[:, 4:].apply(account_name, axis=1)
-        })
+        manipulatedData = pd.DataFrame(
+            {
+                0: manipulatedData[0] + "/" + manipulatedData[1] + "/" + manipulatedData[2],
+                1: pd.to_numeric(manipulatedData[3]),
+                2: manipulatedData.iloc[:, 4:].apply(account_name, axis=1),
+            }
+        )
 
         original_order = manipulatedData.columns.tolist()
         grouped_series = manipulatedData.groupby([0, 2], as_index=False)[1].sum()
@@ -124,5 +125,3 @@ class ManipulateData:
         result.columns = range(len(original_order))
 
         return result
-
-    

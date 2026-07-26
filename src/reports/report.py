@@ -33,10 +33,7 @@ class Report:
         running = pivot.cumsum()
 
         fig, (ax1, ax2) = plt.subplots(
-            2, 1,
-            sharex=True,
-            figsize=(12, 8),
-            gridspec_kw={"height_ratios": [1, 1]}
+            2, 1, sharex=True, figsize=(12, 8), gridspec_kw={"height_ratios": [1, 1]}
         )
 
         # Savings
@@ -47,26 +44,24 @@ class Report:
 
         def thousands(x, pos):
             if abs(x) >= 1_000_000:
-                return f"{x/1_000_000:.2f}M"
+                return f"{x / 1_000_000:.2f}M"
             elif abs(x) >= 1_000:
-                return f"{x/1_000:.2f}k"
+                return f"{x / 1_000:.2f}k"
             return f"{x:.2f}"
-        
+
         ax1.set_ylabel("Balance")
         ax1.grid(True)
         ax1.yaxis.set_major_formatter(FuncFormatter(thousands))
         ax1.legend(title="Account")
-    
+
         ax2.set_ylabel("Balance")
         ax2.grid(True)
         ax2.yaxis.set_major_formatter(FuncFormatter(thousands))
         ax2.legend(title="Account")
         ax2.set_xlabel("Date")
         ax2.xaxis.set_major_formatter(mdates.DateFormatter("%b %Y"))
-        
 
         fig.suptitle("Running Balance by Account")
 
         # fig.savefig("running_balance.png", dpi=300, bbox_inches="tight")
         plt.show()
-        
