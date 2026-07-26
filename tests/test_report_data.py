@@ -88,3 +88,36 @@ class TestReportManipulateData(BaseTestCase):
         result = ManipulateData.forOverviewReport(normalized_data)
 
         pd.testing.assert_frame_equal(result, expected)
+
+    def test_shouldManipulateDataForTrendExpensesReport(self):
+        normalized_data = np.array(
+            [
+                ["2026", "07", "15", "10.0", "Expenses", "AA", ""],
+                ["2026", "07", "15", "-10.0", "Bank", "Checking", ""],
+                ["2026", "07", "15", "10.0", "Expenses", "BB", "CC"],
+                ["2026", "07", "15", "-10.0", "Bank", "CreditCard", ""],
+                ["2026", "07", "16", "10.0", "Expenses", "AA", ""],
+                ["2026", "07", "16", "-10.0", "Bank", "Checking", ""],
+                ["2026", "08", "21", "10.0", "Expenses", "AA", ""],
+                ["2026", "08", "21", "-10.0", "Bank", "Checking", ""],
+                ["2026", "08", "29", "10.0", "Liability", "DD", ""],
+                ["2026", "08", "29", "-10.0", "Bank", "Checking", ""],
+            ]
+        )
+        expected = pd.DataFrame(
+            [
+                ["2026/07/15", -20.0, "Bank"],
+                ["2026/07/15", 10.0, "Expenses:AA"],
+                ["2026/07/15", 10.0, "Expenses:BB"],
+                ["2026/07/16", -10.0, "Bank"],
+                ["2026/07/16", 10.0, "Expenses:AA"],
+                ["2026/08/21", -10.0, "Bank"],
+                ["2026/08/21", 10.0, "Expenses:AA"],
+                ["2026/08/29", -10.0, "Bank"],
+                ["2026/08/29", 10.0, "Liability"],
+            ]
+        )
+
+        result = ManipulateData.forTrendExpensesReport(normalized_data)
+
+        pd.testing.assert_frame_equal(result, expected)

@@ -82,4 +82,4 @@ class LedgerReportWorkflow:
 
     def reportExpenseCategoriesTrend(self):
         # Line graph with multiple points
-        pass
+        self.report.report_trend_expenses()

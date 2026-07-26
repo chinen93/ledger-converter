@@ -34,5 +34,6 @@ def mainReports() -> None:
     workflow = LedgerReportWorkflow()
 
     workflow.reportOverview()
+    workflow.reportExpenseCategoriesTrend()
 
     log.info("Program Ended")

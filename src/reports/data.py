@@ -7,6 +7,7 @@ import pandas as pd
 ACCOUNT_BANK_SAVING = "Bank:Saving"
 ACCOUNT_BANK_CHECKING = "Bank:Checking"
 ACCOUNT_BANK_CREDIT_CARD = "Bank:CreditCard"
+ACCOUNT_BANKS = "Bank"
 ACCOUNT_EXPENSES = "Expenses"
 ACCOUNT_LIABILITY = "Liability"
 
@@ -116,6 +117,41 @@ class ManipulateData:
             clean_parts = [part for part in parts if part != ""]
 
             return ":".join(clean_parts)
+
+        manipulatedData = pd.DataFrame(
+            {
+                0: manipulatedData[0] + "/" + manipulatedData[1] + "/" + manipulatedData[2],
+                1: pd.to_numeric(manipulatedData[3]),
+                2: manipulatedData.iloc[:, 4:].apply(account_name, axis=1),
+            }
+        )
+
+        original_order = manipulatedData.columns.tolist()
+        grouped_series = manipulatedData.groupby([0, 2], as_index=False)[1].sum()
+        result = grouped_series.reindex(columns=original_order)
+        result.columns = range(len(original_order))
+
+        return result
+    
+    @classmethod
+    def forTrendExpensesReport(cls, data: np.ndarray) -> pd.DataFrame:
+
+        assert data.shape[1] >= 6
+        # ["2026", "07", "15", "10.0", "AA", "BB", "CC", ... ],
+
+        manipulatedData = pd.DataFrame(data)
+
+        manipulatedData[3] = pd.to_numeric(manipulatedData[3], errors="coerce")
+
+        def account_name(row) -> str:
+            parts = row.dropna().astype(str).tolist()
+
+            if parts[0] in {ACCOUNT_BANKS, ACCOUNT_LIABILITY}:
+                return parts[0]
+
+            clean_parts = [part for part in parts if part != ""]
+
+            return ":".join(clean_parts[:2])
 
         manipulatedData = pd.DataFrame(
             {
