@@ -6,7 +6,11 @@ input/config/
 input/files/
 input/reports/
 
+# Output Files
+output/
 output.txt
+
+
 config.sh
 .env
 

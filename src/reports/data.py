@@ -4,6 +4,12 @@ from config.settings import get_settings
 import numpy as np
 import pandas as pd
 
+ACCOUNT_BANK_SAVING = "Bank:Saving"
+ACCOUNT_BANK_CHECKING = "Bank:Checking"
+ACCOUNT_BANK_CREDIT_CARD = "Bank:CreditCard"
+ACCOUNT_EXPENSES = "Expenses"
+ACCOUNT_LIABILITY = "Liability"
+
 
 class Data:
 
@@ -104,7 +110,7 @@ class ManipulateData:
         def account_name(row) -> str:
             parts = row.dropna().astype(str).tolist()
 
-            if parts[0] in {"Expenses", "Liability"}:
+            if parts[0] in {ACCOUNT_EXPENSES, ACCOUNT_LIABILITY}:
                 return parts[0]
 
             clean_parts = [part for part in parts if part != ""]

@@ -95,6 +95,7 @@ def get_settings():  # type: ignore
 
         LEDGER_FILE: Optional[str] = os.getenv("LEDGER_FILE")  # type: ignore
         INPUT_FOLDER: Optional[str] = os.getenv("INPUT_FOLDER")  # type: ignore
+        OUTPUT_FOLDER: Optional[str] = os.getenv("OUTPUT_FOLDER")  # type: ignore
         OUTPUT_FILENAME: Optional[str] = os.getenv("OUTPUT_FILENAME")  # type: ignore
         ALIASES_FILE: Optional[str] = os.getenv("ALIASES_FILE")  # type: ignore
         ACCOUNTS_FILE: Optional[str] = os.getenv("ACCOUNTS_FILE")  # type: ignore
@@ -112,6 +113,7 @@ def get_settings():  # type: ignore
                     "LOG_TO_CONSOLE": self.LOG_TO_CONSOLE,
                     "LEDGER_FILE": self.LEDGER_FILE,
                     "INPUT_FOLDER": self.INPUT_FOLDER,
+                    "OUTPUT_FOLDER": self.OUTPUT_FOLDER,
                     "OUTPUT_FILENAME": self.OUTPUT_FILENAME,
                     "ALIASES_FILE": self.ALIASES_FILE,
                     "ACCOUNTS_FILE": self.ACCOUNTS_FILE,
