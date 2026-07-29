@@ -235,3 +235,137 @@ class Report:
         fig.savefig(filename, dpi=300, bbox_inches="tight")
 
         # plt.show()
+
+    def report_month_variance_expenses(self):
+
+        expense_groups = {
+            "Housing": ["Apt"],
+            "Main": ["Comida", "Compras", "Mercado", "Viagem"],
+            "Other": []
+        }
+
+        reportData = ManipulateData.forTrendExpensesReport(self.initial_data)
+
+        assert reportData.shape[1] == 3
+        reportData.columns = ["date", "amount", "account"]
+        reportData["date"] = pd.to_datetime(reportData["date"], format="%Y/%m/%d")
+
+        # print(reportData)
+
+        # Only expenses
+        expenses = reportData[reportData["account"].str.startswith("Expenses:")].copy()
+
+        # Extract category
+        expenses["category"] = expenses["account"].str.replace("Expenses:", "", regex=False)
+
+        # Convert date and extract month
+        expenses["date"] = pd.to_datetime(expenses["date"])
+        expenses["month"] = expenses["date"].dt.to_period("M")
+
+        # Group by month and category
+        monthly_expenses = (
+            expenses
+            .groupby(["month", "category"])["amount"]
+            .sum()
+            .reset_index()
+        )
+
+        # print(monthly_expenses)
+
+        def thousands(x, pos):
+            if abs(x) >= 1_000_000:
+                return f"{x / 1_000_000:.2f}M"
+            elif abs(x) >= 1_000:
+                return f"{x / 1_000:.2f}k"
+            return f"{x:.0f}"
+        
+        plot_data = monthly_expenses.pivot(
+            index="month",
+            columns="category",
+            values="amount"
+        ).fillna(0)
+
+        fig, (ax1, ax2) = plt.subplots(
+            2,
+            1,
+            figsize=(15, 9),
+            sharex=True,
+            gridspec_kw={"height_ratios": [1, 1]}
+        )
+
+        # Graph AX1
+        prev = plot_data.iloc[-3]
+        curr = plot_data.iloc[-2]
+
+        # Keep categories where at least one month is non-zero
+        mask = (prev != 0) | (curr != 0)
+
+        prev = prev[mask]
+        curr = curr[mask]
+
+        variance = curr - prev
+        variance = variance.astype(float)
+        variance.index = variance.index.astype(str)
+        sorted_variance = variance.sort_values()
+
+        colors = sorted_variance.map(lambda x: "red" if x > 0 else "green")
+
+        ax1.barh(
+            sorted_variance.index,
+            sorted_variance.values,
+            color=colors
+        )
+        ax1.axvline(0, color="black", linewidth=1)
+        ax1.set_title(
+            f"Expense Change: {plot_data.index[-3]} → {plot_data.index[-2]}"
+        )
+        ax1.set_xlabel("Change ($)")
+        ax1.xaxis.set_major_locator(MultipleLocator(100))
+        ax1.xaxis.set_major_formatter(FuncFormatter(thousands))
+        ax1.set_axisbelow(True)
+        ax1.grid(True, alpha=0.4)
+
+        # Graph AX2
+        prev = plot_data.iloc[-2]
+        curr = plot_data.iloc[-1]
+
+        # Keep categories where at least one month is non-zero
+        mask = (prev != 0) | (curr != 0)
+
+        prev = prev[mask]
+        curr = curr[mask]
+
+        variance = curr - prev
+        variance = variance.astype(float)
+        variance.index = variance.index.astype(str)
+        sorted_variance = variance.sort_values()
+
+        colors = sorted_variance.map(lambda x: "red" if x > 0 else "green")
+
+        ax2.barh(
+            sorted_variance.index,
+            sorted_variance.values,
+            color=colors
+        )
+        ax2.axvline(0, color="black", linewidth=1)
+        ax2.set_title(
+            f"Expense Change: {plot_data.index[-2]} → {plot_data.index[-1]}"
+        )
+        ax2.set_xlabel("Change ($)")
+        ax2.xaxis.set_major_locator(MultipleLocator(100))
+        ax2.xaxis.set_major_formatter(FuncFormatter(thousands))
+        ax2.tick_params(axis="x", labelrotation=90)
+        ax2.set_axisbelow(True)
+        ax2.grid(True, alpha=0.4)
+
+        plt.tight_layout(rect=(0, 0, 1, 0.96))
+
+        fig.suptitle("Monthly Variance Breakdown")
+
+        filename = self.output_folder + "month_variance_expenses.png"
+        self.log.info(f"Save Report: '{filename}'")
+
+        fig.savefig(filename, dpi=300, bbox_inches="tight")
+
+        # plt.show()
+    

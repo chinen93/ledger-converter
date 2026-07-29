@@ -80,6 +80,9 @@ class LedgerReportWorkflow:
         # Stacked percentage bar graph
         pass
 
+    def reportExpensesMonthVariance(self):
+        self.report.report_month_variance_expenses()
+
     def reportExpenseCategoriesTrend(self):
         # Line graph with multiple points
         self.report.report_trend_expenses()

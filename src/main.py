@@ -35,5 +35,6 @@ def mainReports() -> None:
 
     workflow.reportOverview()
     workflow.reportExpenseCategoriesTrend()
+    workflow.reportExpensesMonthVariance()
 
     log.info("Program Ended")
