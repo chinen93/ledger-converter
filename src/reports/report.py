@@ -37,7 +37,7 @@ class Report:
         reportData["date"] = pd.to_datetime(reportData["date"], format="%Y/%m/%d")
 
         filteredReportData = reportData.loc[
-            ~reportData["account"].isin([ACCOUNT_EXPENSES, ACCOUNT_LIABILITY])
+            ~reportData["account"].isin([ACCOUNT_LIABILITY])
         ]
         pivot = filteredReportData.pivot_table(
             index="date",
@@ -49,7 +49,7 @@ class Report:
         running = pivot.cumsum()
 
         fig, (ax1, ax2) = plt.subplots(
-            2, 1, sharex=True, figsize=(15, 9), gridspec_kw={"height_ratios": [1, 2]}
+            2, 1, sharex=True, figsize=(15, 9), gridspec_kw={"height_ratios": [1, 3]}
         )
 
         # Savings
@@ -57,6 +57,19 @@ class Report:
 
         # Checking and Credit Card
         running[[ACCOUNT_BANK_CHECKING, ACCOUNT_BANK_CREDIT_CARD]].plot(ax=ax2)
+        
+        # Monthly cumulative expenses
+        monthly_expenses = (
+            -pivot[ACCOUNT_EXPENSES]
+            .groupby(pivot.index.to_period("M"))
+            .cumsum()
+        )
+        monthly_expenses.plot(
+            ax=ax2,
+            linestyle="--",
+            linewidth=2,
+            label="Monthly Expenses"
+        )
 
         def thousands(x, pos):
             if abs(x) >= 1_000_000:
@@ -69,15 +82,29 @@ class Report:
         ax1.grid(True)
         ax1.yaxis.set_major_locator(MultipleLocator(10000))
         ax1.yaxis.set_major_formatter(FuncFormatter(thousands))
-        ax1.legend(title="Account")
+        ax1.label_outer()
+        ax1.legend(
+            title="Account",
+            fontsize=8,
+            title_fontsize=10,
+            bbox_to_anchor=(1.02, 1),
+            loc="upper left"
+        )
 
         ax2.set_ylabel("Balance")
         ax2.grid(True)
         ax2.axhline(y=0, color="black", linewidth=1.2, linestyle="-")
         ax2.yaxis.set_major_locator(MultipleLocator(1000))
         ax2.yaxis.set_major_formatter(FuncFormatter(thousands))
-        ax2.legend(title="Account")
         ax2.set_xlabel("Date")
+        ax2.label_outer()
+        ax2.legend(
+            title="Account",
+            fontsize=8,
+            title_fontsize=10,
+            bbox_to_anchor=(1.02, 1),
+            loc="upper left"
+        )
         ax2.xaxis.set_major_formatter(mdates.DateFormatter("%b %Y"))
 
         fig.suptitle("Running Balance by Account")
@@ -163,7 +190,7 @@ class Report:
             3,
             1,
             figsize=(15, 9),
-            sharex=True,
+            sharex=False,
             gridspec_kw={"height_ratios": [1, 2, 4]}
         )
 
@@ -175,6 +202,7 @@ class Report:
         ax1.yaxis.set_major_formatter(FuncFormatter(thousands))
         ax1.set_title("Apartment Expenses")
         ax1.set_ylabel("Amount ($)")
+        ax1.label_outer()
         ax1.grid(axis="y")
         ax1.legend(
             title="Category",
@@ -195,6 +223,7 @@ class Report:
         ax2.set_title("Main Expenses")
         ax2.set_ylabel("Amount ($)")
         ax2.grid(axis="y")
+        ax2.label_outer()
         ax2.legend(
             title="Category",
             fontsize=8,
@@ -202,7 +231,6 @@ class Report:
             bbox_to_anchor=(1.02, 1),
             loc="upper left"
         )
-
 
         # Other expenses
         other_plot.plot(
@@ -305,8 +333,20 @@ class Report:
 
         variance = curr - prev
         variance = variance.astype(float)
+   
+        # Total difference between the two months
+        total_variance = variance.sum()
+
         variance.index = variance.index.astype(str)
         sorted_variance = variance.sort_values()
+
+        # Add Total as the first row
+        sorted_variance.loc["Total"] = total_variance
+        
+        # Move Total to the beginning
+        sorted_variance = sorted_variance.reindex(
+            ["Total"] + [x for x in sorted_variance.index if x != "Total"]
+        )
 
         colors = sorted_variance.map(lambda x: "red" if x > 0 else "green")
 
@@ -323,6 +363,7 @@ class Report:
         ax1.xaxis.set_major_locator(MultipleLocator(100))
         ax1.xaxis.set_major_formatter(FuncFormatter(thousands))
         ax1.set_axisbelow(True)
+        ax1.label_outer()
         ax1.grid(True, alpha=0.4)
 
         # Graph AX2
@@ -337,8 +378,20 @@ class Report:
 
         variance = curr - prev
         variance = variance.astype(float)
+
+        # Total difference between the two months
+        total_variance = variance.sum()
+
         variance.index = variance.index.astype(str)
         sorted_variance = variance.sort_values()
+
+        # Add Total as the first row
+        sorted_variance.loc["Total"] = total_variance
+
+        # Move Total to the beginning
+        sorted_variance = sorted_variance.reindex(
+            ["Total"] + [x for x in sorted_variance.index if x != "Total"]
+        )
 
         colors = sorted_variance.map(lambda x: "red" if x > 0 else "green")
 
@@ -356,6 +409,7 @@ class Report:
         ax2.xaxis.set_major_formatter(FuncFormatter(thousands))
         ax2.tick_params(axis="x", labelrotation=90)
         ax2.set_axisbelow(True)
+        ax2.label_outer()
         ax2.grid(True, alpha=0.4)
 
         plt.tight_layout(rect=(0, 0, 1, 0.96))
