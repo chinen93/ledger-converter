@@ -28,13 +28,13 @@ runLedgerReports() {
     echo "Running Ledger Reports"
 
     # Activate environment to run code
-    source venv/bin/activate
+    #source venv/bin/activate
 
     # Run code
-    python3 ledger-tool.py --report
+    #python3 ledger-tool.py --report
 
     # Deactivate environment
-    deactivate
+    #deactivate
 }
 
 runTests() {
