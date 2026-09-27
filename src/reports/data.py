@@ -132,7 +132,7 @@ class ManipulateData:
         result.columns = range(len(original_order))
 
         return result
-    
+
     @classmethod
     def forTrendExpensesReport(cls, data: np.ndarray) -> pd.DataFrame:
 

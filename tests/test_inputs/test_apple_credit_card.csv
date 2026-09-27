@@ -1,0 +1,5 @@
+Transaction Date,Clearing Date,Description,Merchant,Category,Type,Amount (USD),Purchased By
+06/29/2026,06/29/2026,"AAAAA","BBBBB","Payment","Payment","-600.00","Person A"
+06/28/2026,06/29/2026,"CCCCC","DDDDD","Grocery","Purchase","100.80","Person A"
+06/27/2026,06/28/2026,"EEEEE","FFFFF","Restaurants","Purchase","12.05","Person A"
+06/26/2026,06/27/2026,"GGGGG","HHHHH","Other","Purchase","12.27","Samia Barbosa"

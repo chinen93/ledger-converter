@@ -1,4 +1,5 @@
 Bank:Checking
 Bank:CreditCard
+Bank:AppleCard
 Bank:Test:CreditCard
 Liability:Test

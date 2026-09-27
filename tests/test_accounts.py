@@ -19,9 +19,12 @@ class TestAccounts(BaseTestCase):
 
     def test_shouldCreateAccounts(self):
 
+        assert self.accounts is not None
+
         expected = {
             "Bank:CHECKING": "Bank:Checking",
             "Bank:CREDITCARD": "Bank:CreditCard",
+            "Bank:APPLECARD": "Bank:AppleCard",
             "Liability:TEST": "Liability:Test",
         }
 
@@ -32,6 +35,8 @@ class TestAccounts(BaseTestCase):
             self.assertEqual(value, expectedValue)
 
     def test_shouldGetAccounts(self):
+
+        assert self.accounts is not None
 
         tests = [
             ("Bank", "Checking", "Bank:Checking"),

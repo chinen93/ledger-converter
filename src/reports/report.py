@@ -10,7 +10,7 @@ from src.reports.data import (
     ACCOUNT_BANK_CHECKING,
     ACCOUNT_BANK_CREDIT_CARD,
     ACCOUNT_BANK_SAVING,
-    ACCOUNT_BANKS,
+    # ACCOUNT_BANKS,
     ACCOUNT_EXPENSES,
     ACCOUNT_LIABILITY,
     ManipulateData,
@@ -36,9 +36,7 @@ class Report:
         reportData.columns = ["date", "amount", "account"]
         reportData["date"] = pd.to_datetime(reportData["date"], format="%Y/%m/%d")
 
-        filteredReportData = reportData.loc[
-            ~reportData["account"].isin([ACCOUNT_LIABILITY])
-        ]
+        filteredReportData = reportData.loc[~reportData["account"].isin([ACCOUNT_LIABILITY])]
         pivot = filteredReportData.pivot_table(
             index="date",
             columns="account",
@@ -57,19 +55,10 @@ class Report:
 
         # Checking and Credit Card
         running[[ACCOUNT_BANK_CHECKING, ACCOUNT_BANK_CREDIT_CARD]].plot(ax=ax2)
-        
+
         # Monthly cumulative expenses
-        monthly_expenses = (
-            -pivot[ACCOUNT_EXPENSES]
-            .groupby(pivot.index.to_period("M"))
-            .cumsum()
-        )
-        monthly_expenses.plot(
-            ax=ax2,
-            linestyle="--",
-            linewidth=2,
-            label="Monthly Expenses"
-        )
+        monthly_expenses = -pivot[ACCOUNT_EXPENSES].groupby(pivot.index.to_period("M")).cumsum()
+        monthly_expenses.plot(ax=ax2, linestyle="--", linewidth=2, label="Monthly Expenses")
 
         def thousands(x, pos):
             if abs(x) >= 1_000_000:
@@ -88,7 +77,7 @@ class Report:
             fontsize=8,
             title_fontsize=10,
             bbox_to_anchor=(1.02, 1),
-            loc="upper left"
+            loc="upper left",
         )
 
         ax2.set_ylabel("Balance")
@@ -103,7 +92,7 @@ class Report:
             fontsize=8,
             title_fontsize=10,
             bbox_to_anchor=(1.02, 1),
-            loc="upper left"
+            loc="upper left",
         )
         ax2.xaxis.set_major_formatter(mdates.DateFormatter("%b %Y"))
 
@@ -115,7 +104,6 @@ class Report:
 
         fig.savefig(filename, dpi=300, bbox_inches="tight")
 
-        
         # plt.show()
 
     def report_trend_expenses(self):
@@ -123,7 +111,7 @@ class Report:
         expense_groups = {
             "Housing": ["Apt"],
             "Main": ["Comida", "Compras", "Mercado", "Viagem"],
-            "Other": []
+            "Other": [],
         }
 
         reportData = ManipulateData.forTrendExpensesReport(self.initial_data)
@@ -145,12 +133,7 @@ class Report:
         expenses["month"] = expenses["date"].dt.to_period("M")
 
         # Group by month and category
-        monthly_expenses = (
-            expenses
-            .groupby(["month", "category"])["amount"]
-            .sum()
-            .reset_index()
-        )
+        monthly_expenses = expenses.groupby(["month", "category"])["amount"].sum().reset_index()
 
         # print(monthly_expenses)
 
@@ -160,44 +143,33 @@ class Report:
             elif abs(x) >= 1_000:
                 return f"{x / 1_000:.2f}k"
             return f"{x:.0f}"
-        
+
         plot_data = monthly_expenses.pivot(
-            index="month",
-            columns="category",
-            values="amount"
+            index="month", columns="category", values="amount"
         ).fillna(0)
 
         # Create top 8 + Other dataframe
         all_categories = plot_data.columns.tolist()
         expense_groups["Other"] = [
-            c for c in all_categories
-            if c not in expense_groups["Housing"] + expense_groups["Main"]
+            c for c in all_categories if c not in expense_groups["Housing"] + expense_groups["Main"]
         ]
 
-        other_totals = plot_data[expense_groups["Other"] ].sum().sort_values(ascending=False)
+        other_totals = plot_data[expense_groups["Other"]].sum().sort_values(ascending=False)
 
         top_other_categories = other_totals.head(10).index
 
         other_plot = plot_data[top_other_categories].copy()
         # print(other_plot)
         other_plot["Other"] = (
-            plot_data[expense_groups["Other"] ]
-            .drop(columns=top_other_categories)
-            .sum(axis=1)
+            plot_data[expense_groups["Other"]].drop(columns=top_other_categories).sum(axis=1)
         )
-                
+
         fig, (ax1, ax2, ax3) = plt.subplots(
-            3,
-            1,
-            figsize=(15, 9),
-            sharex=False,
-            gridspec_kw={"height_ratios": [1, 2, 4]}
+            3, 1, figsize=(15, 9), sharex=False, gridspec_kw={"height_ratios": [1, 2, 4]}
         )
 
         # Apartment
-        plot_data[expense_groups["Housing"]].plot(
-            ax=ax1
-        )
+        plot_data[expense_groups["Housing"]].plot(ax=ax1)
         ax1.yaxis.set_major_locator(MultipleLocator(2000))
         ax1.yaxis.set_major_formatter(FuncFormatter(thousands))
         ax1.set_title("Apartment Expenses")
@@ -209,15 +181,11 @@ class Report:
             fontsize=8,
             title_fontsize=10,
             bbox_to_anchor=(1.02, 1),
-            loc="upper left"
+            loc="upper left",
         )
-
 
         # Main
-        plot_data[expense_groups["Main"]].plot(
-            kind="bar",
-            ax=ax2
-        )
+        plot_data[expense_groups["Main"]].plot(kind="bar", ax=ax2)
         ax2.yaxis.set_major_locator(MultipleLocator(250))
         ax2.yaxis.set_major_formatter(FuncFormatter(thousands))
         ax2.set_title("Main Expenses")
@@ -229,16 +197,11 @@ class Report:
             fontsize=8,
             title_fontsize=10,
             bbox_to_anchor=(1.02, 1),
-            loc="upper left"
+            loc="upper left",
         )
 
         # Other expenses
-        other_plot.plot(
-            kind="bar",
-            stacked=True,
-            colormap="tab20",
-            ax=ax3
-        )
+        other_plot.plot(kind="bar", stacked=True, colormap="tab20", ax=ax3)
         ax3.yaxis.set_major_locator(MultipleLocator(1000))
         ax3.yaxis.set_major_formatter(FuncFormatter(thousands))
         ax3.set_title("Other Expenses (Top Categories)")
@@ -249,7 +212,7 @@ class Report:
             fontsize=8,
             title_fontsize=10,
             bbox_to_anchor=(1.02, 1),
-            loc="upper left"
+            loc="upper left",
         )
 
         plt.xticks(rotation=45)
@@ -266,11 +229,11 @@ class Report:
 
     def report_month_variance_expenses(self):
 
-        expense_groups = {
-            "Housing": ["Apt"],
-            "Main": ["Comida", "Compras", "Mercado", "Viagem"],
-            "Other": []
-        }
+        # expense_groups = {
+        #    "Housing": ["Apt"],
+        #    "Main": ["Comida", "Compras", "Mercado", "Viagem"],
+        #    "Other": [],
+        # }
 
         reportData = ManipulateData.forTrendExpensesReport(self.initial_data)
 
@@ -291,12 +254,7 @@ class Report:
         expenses["month"] = expenses["date"].dt.to_period("M")
 
         # Group by month and category
-        monthly_expenses = (
-            expenses
-            .groupby(["month", "category"])["amount"]
-            .sum()
-            .reset_index()
-        )
+        monthly_expenses = expenses.groupby(["month", "category"])["amount"].sum().reset_index()
 
         # print(monthly_expenses)
 
@@ -306,19 +264,13 @@ class Report:
             elif abs(x) >= 1_000:
                 return f"{x / 1_000:.2f}k"
             return f"{x:.0f}"
-        
+
         plot_data = monthly_expenses.pivot(
-            index="month",
-            columns="category",
-            values="amount"
+            index="month", columns="category", values="amount"
         ).fillna(0)
 
         fig, (ax1, ax2) = plt.subplots(
-            2,
-            1,
-            figsize=(15, 9),
-            sharex=True,
-            gridspec_kw={"height_ratios": [1, 1]}
+            2, 1, figsize=(15, 9), sharex=True, gridspec_kw={"height_ratios": [1, 1]}
         )
 
         # Graph AX1
@@ -333,7 +285,7 @@ class Report:
 
         variance = curr - prev
         variance = variance.astype(float)
-   
+
         # Total difference between the two months
         total_variance = variance.sum()
 
@@ -342,7 +294,7 @@ class Report:
 
         # Add Total as the first row
         sorted_variance.loc["Total"] = total_variance
-        
+
         # Move Total to the beginning
         sorted_variance = sorted_variance.reindex(
             ["Total"] + [x for x in sorted_variance.index if x != "Total"]
@@ -350,15 +302,9 @@ class Report:
 
         colors = sorted_variance.map(lambda x: "red" if x > 0 else "green")
 
-        ax1.barh(
-            sorted_variance.index,
-            sorted_variance.values,
-            color=colors
-        )
+        ax1.barh(sorted_variance.index, sorted_variance.values, color=colors)
         ax1.axvline(0, color="black", linewidth=1)
-        ax1.set_title(
-            f"Expense Change: {plot_data.index[-3]} → {plot_data.index[-2]}"
-        )
+        ax1.set_title(f"Expense Change: {plot_data.index[-3]} → {plot_data.index[-2]}")
         ax1.set_xlabel("Change ($)")
         ax1.xaxis.set_major_locator(MultipleLocator(100))
         ax1.xaxis.set_major_formatter(FuncFormatter(thousands))
@@ -395,15 +341,9 @@ class Report:
 
         colors = sorted_variance.map(lambda x: "red" if x > 0 else "green")
 
-        ax2.barh(
-            sorted_variance.index,
-            sorted_variance.values,
-            color=colors
-        )
+        ax2.barh(sorted_variance.index, sorted_variance.values, color=colors)
         ax2.axvline(0, color="black", linewidth=1)
-        ax2.set_title(
-            f"Expense Change: {plot_data.index[-2]} → {plot_data.index[-1]}"
-        )
+        ax2.set_title(f"Expense Change: {plot_data.index[-2]} → {plot_data.index[-1]}")
         ax2.set_xlabel("Change ($)")
         ax2.xaxis.set_major_locator(MultipleLocator(100))
         ax2.xaxis.set_major_formatter(FuncFormatter(thousands))
@@ -422,4 +362,3 @@ class Report:
         fig.savefig(filename, dpi=300, bbox_inches="tight")
 
         # plt.show()
-    
