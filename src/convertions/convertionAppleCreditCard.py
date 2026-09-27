@@ -26,4 +26,9 @@ class AppleCreditCardConvertion(ConvertionStrategy):
         return None
 
     def parse_row(self, row: list[str]) -> ParsedRow:
-        return ParsedRow(date=row[0], description=row[2], amount=float(row[6].replace(",", "")))
+        return ParsedRow(
+            date=row[0],
+            description=row[2],
+            # Amount negative is to deposit, opposite of what we have
+            amount=(float(row[6].replace(",", "")) * -1),
+        )

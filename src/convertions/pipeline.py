@@ -2,6 +2,7 @@ from config.logging import get_logger
 from src.accounts.accounts import AccountsManager
 from src.convertions.convertion import ConvertionStrategy
 from src.convertions.convertionCreditCard import CreditCardConvertion
+from src.convertions.convertionAppleCreditCard import AppleCreditCardConvertion
 from src.convertions.convertionStatement import StatementConvertion
 from src.files.csv import ReadCSV
 from src.models.transaction import Transaction
@@ -9,7 +10,7 @@ from src.models.transaction import Transaction
 
 class ConvertionPipeline:
 
-    STRATEGIES = (StatementConvertion, CreditCardConvertion)
+    STRATEGIES = (StatementConvertion, CreditCardConvertion, AppleCreditCardConvertion)
 
     def __init__(self, accounts: AccountsManager):
         self.log = get_logger(__name__)
